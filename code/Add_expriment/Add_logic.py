@@ -1,0 +1,171 @@
+import math
+import time
+
+import xlrd  # 导入模块
+from xlutils.copy import copy  # 导入copy模块
+from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtGui import QImage
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QDialog
+import matlab.engine
+import CV
+from Add_exp import Ui_add_exp_dialog
+
+pretreat = {0: '无', 10: '植被提取', 23: '均值滤波3*3', 25: '均值滤波5*5', 27: '均值滤波7*7',
+            33: '中值滤波3*3', 35: '中值滤波5*5', 37: '中值滤波7*7',
+            43: '高斯滤波3*3', 45: '高斯滤波5*5', 47: '高斯滤波7*7'}
+vis = []
+
+algorithm = {0: '请选择', 1: 'CV算法'}
+
+path = ""
+img = ""
+right_list = []
+wrong_list = []
+last_list = []
+
+
+class Logic_add(QDialog, Ui_add_exp_dialog):
+
+    def __init__(self, parent=None):
+        super(Logic_add, self).__init__(parent)
+        self.setupUi(self)
+        self.init_pretrat()  # 初始化预处理下拉选项
+        self.Button_renew.clicked.connect(self.init_pretrat)  # 绑定预处理重置按
+        self.init_algorithm()  # 初始化处理算法
+
+    def init_algorithm(self):
+        self.algorithm_select.clear()
+        for k, v in algorithm.items():
+            self.algorithm_select.addItem(v, k)
+        self.para1.hide()
+        self.para2.hide()
+        self.para_type1.hide()
+        self.para_type2.hide()
+
+    @pyqtSlot(int)
+    def on_algorithm_select_activated(self, index):
+        tp = self.algorithm_select.itemData(index)
+        if tp == 1:
+            self.para_type1.setText('迭代次数:')
+            self.para_type2.setText('膨胀收缩系数:')
+            self.para_type1.show()
+            self.para_type2.show()
+            self.para1.show()
+            self.para2.show()
+
+    def init_pretrat(self):
+        self.pretreatment1.clear()
+        self.pretreatment2.clear()
+        self.pretreatment3.clear()
+        self.pretreatment4.clear()
+        vis.clear()
+        for k, v in pretreat.items():
+            self.pretreatment1.addItem(v, k)
+
+    @pyqtSlot(int)
+    def on_pretreatment1_activated(self, index):
+        vv = self.pretreatment1.itemData(index)
+        vv = vv / 10
+        vis.append(math.floor(vv))
+        for k, v in pretreat.items():
+            if math.floor(k / 10) != math.floor(vv):
+                self.pretreatment2.addItem(v, k)
+
+    @pyqtSlot(int)
+    def on_pretreatment2_activated(self, index):
+        vv = self.pretreatment2.itemData(index)
+        vv = vv / 10
+        vis.append(math.floor(vv))
+        for k, v in pretreat.items():
+            if not math.floor(k / 10) in vis:
+                self.pretreatment3.addItem(v, k)
+
+    @pyqtSlot(int)
+    def on_pretreatment3_activated(self, index):
+        vv = self.pretreatment3.itemData(index)
+        vv = vv / 10
+        vis.append(math.floor(vv))
+        for k, v in pretreat.items():
+            if not math.floor(k / 10) in vis:
+                self.pretreatment4.addItem(v, k)
+
+    def accept(self):  # 1’
+        tp = self.do_pretreatment()
+        print(img)
+        a = self.para1.text()
+        b = self.para2.text()
+        print(a, b)
+
+        # if self.algorithm_select.currentText() == 'CV算法':
+        #     ans=CV.cv.get_cv(img, int(a), float(b))
+        ans = CV.cv.get_cv('D:/shaoxing0.6m_gauss.tif', 5, 0.1)
+        self.ans_compare(ans)  # 目视和计算结果的对比
+        self.write_ans(ans)  # 把结果写入文件
+        self.close()
+
+    def distance(self, pa, pb):
+        return math.sqrt((pa[0] - pb[0]) * (pa[0] - pb[0]) + (pa[1] - pb[1]) * (pa[1] - pb[1]))
+
+    def ans_compare(self, ans):
+        xf = xlrd.open_workbook(path)
+        ms = xf.sheet_by_index(0).cell_value(1, 4)
+        ms_list = eval(ms)
+        ans_list = eval(str(ans))
+        global right_list, wrong_list, last_list
+        right_list.clear()
+        wrong_list.clear()
+        last_list.clear()
+        vis_ans = [0] * len(ans_list)
+        vis_ms = [0] * len(ms_list)
+        for i in range(len(ms_list)):
+            for j in range(len(ans_list)):
+                if vis_ans[j] == 1:
+                    continue
+                if self.distance(ms_list[i], ans_list[j]) < 7.0:  # 这个距离到底多少合适???还需要商量
+                    vis_ms[i] = 1
+                    vis_ans[j] = 1
+                    break
+
+        for i in range(len(ms_list)):
+            if vis_ms[i] == 1:
+                right_list.append(ms_list[i])
+            else:
+                last_list.append(ms_list[i])
+        for i in range(len(ans_list)):
+            if vis_ans[i] == 0:
+                wrong_list.append(ans_list[i])
+
+    def write_ans(self, ans):
+        print(ans)
+        rb = xlrd.open_workbook(path)
+        row = rb.sheet_by_index(1).nrows
+        wb = copy(rb)
+        wsheet = wb.get_sheet(1)
+        wsheet.write(row, 0, str(row))
+        wsheet.write(row, 1, str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))
+        wsheet.write(row, 2, self.pretreatment1.currentText())
+        wsheet.write(row, 3, self.pretreatment2.currentText())
+        wsheet.write(row, 4, self.pretreatment3.currentText())
+        wsheet.write(row, 5, self.pretreatment4.currentText())
+        wsheet.write(row, 6, self.algorithm_select.currentText() + '_' + self.para1.text() + '_' + self.para2.text())
+        wsheet.write(row, 7, str(len(right_list) + len(wrong_list)))
+        wsheet.write(row, 8, str(len(right_list)))
+        wsheet.write(row, 9, str(len(wrong_list)))
+        wsheet.write(row, 10, str(len(last_list)))
+        wsheet.write(row, 11, str(len(right_list) / (len(right_list) + len(wrong_list))))
+        wsheet.write(row, 12, str(ans))
+        wsheet.write(row, 13, str(right_list))
+        wsheet.write(row, 14, str(wrong_list))
+        wsheet.write(row, 15, str(last_list))
+        wb.save(path)
+
+    def set_url(self, img_, f_url):
+        global img, path
+        img = img_
+        path = f_url
+
+    def get_path(self):
+        return path
+
+    def do_pretreatment(self):
+        return path
