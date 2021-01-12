@@ -4,8 +4,8 @@ import time
 import xlrd  # 导入模块
 from xlutils.copy import copy  # 导入copy模块
 from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtGui import QImage
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QDialog, QRadioButton, QButtonGroup
+from PyQt5.QtGui import QImage, QFont
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QDialog, QRadioButton, QButtonGroup, QCheckBox
 import matlab.engine
 import CV
 from Add_exp import Ui_add_exp_dialog
@@ -37,16 +37,18 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     def init_pretratment(self):
         positions = [(i, j) for i in range(5) for j in range(4)]
         names=['ssddf','sdf','sdf','ssddf','sdf','sdf','ssddf','sdf','sdf','ssddf','sdf','sdf','ssddf','sdf','sdf','ssddf','sdf','sdf']
-        # liss=[]
-        # li=[]
-        # for i in range(len(names)):
-        #     tp
-        #     li.append()
-        #     liss.append(QRadioButton(names[i]))
-        # for position, name in zip(positions, names):
-        #     tp=QButtonGroup().addButton(QRadioButton(name))
-        #     self.gridLayout_list.addWidget(tp,*position)
+        font = QFont()
+        font.setBold(True)  # 加粗
+        font.setPointSize(16)
+        for position, name in zip(positions, names):
+            tp=QCheckBox(name)
+            tp.stateChanged.connect(self.check_op)
+            tp.setFont(font)
+            self.gridLayout_list.addWidget(tp,*position)
 
+    def check_op(self):
+        tp=self.sender()
+        print(tp.text())
     def init_algorithm(self):
         self.algorithm_select.clear()
         xf=xlrd.open_workbook('D:/Tree/config.xls')
