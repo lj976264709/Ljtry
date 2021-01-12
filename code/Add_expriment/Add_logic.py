@@ -14,7 +14,7 @@ pretreat = {0: '无', 10: '植被提取', 23: '均值滤波3*3', 25: '均值滤�
             33: '中值滤波3*3', 35: '中值滤波5*5', 37: '中值滤波7*7',
             43: '高斯滤波3*3', 45: '高斯滤波5*5', 47: '高斯滤波7*7'}
 vis = []
-
+names=[]
 algorithm = {0: '请选择', 1: 'CV算法'}
 
 path = ""
@@ -35,8 +35,14 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         self.init_pretratment()
 
     def init_pretratment(self):
-        positions = [(i, j) for i in range(5) for j in range(4)]
-        names=['ssddf','sdf','sdf','ssddf','sdf','sdf','ssddf','sdf','sdf','ssddf','sdf','sdf','ssddf','sdf','sdf','ssddf','sdf','sdf']
+        positions = [(i, j) for i in range(10) for j in range(4)]
+        xf = xlrd.open_workbook('D:/Tree/config.xls')
+        st = xf.sheet_by_index(0)
+        tp = st.row(1)
+        global names
+        names=[]
+        for i in range(1,len(tp)):
+            names.append(tp[i].value)
         font = QFont()
         font.setBold(True)  # 加粗
         font.setPointSize(16)
