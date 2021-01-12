@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>674</width>
-    <height>307</height>
+    <width>665</width>
+    <height>404</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>280</x>
-     <y>240</y>
+     <y>330</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -56,7 +56,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>80</y>
+     <y>170</y>
      <width>81</width>
      <height>16</height>
     </rect>
@@ -69,7 +69,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>100</y>
+     <y>190</y>
      <width>561</width>
      <height>61</height>
     </rect>
@@ -79,7 +79,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>180</y>
+     <y>270</y>
      <width>91</width>
      <height>16</height>
     </rect>
@@ -92,7 +92,7 @@
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>180</y>
+     <y>270</y>
      <width>111</width>
      <height>22</height>
     </rect>
@@ -112,6 +112,29 @@
      <string>无人机影像</string>
     </property>
    </item>
+  </widget>
+  <widget class="QLineEdit" name="file_url">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>90</y>
+     <width>321</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Button_open_file">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>90</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>选择实验目录</string>
+   </property>
   </widget>
  </widget>
  <resources/>

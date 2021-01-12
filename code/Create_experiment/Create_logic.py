@@ -23,6 +23,11 @@ class Logic_create(QDialog, Ui_Create_Dialog):
         super(Logic_create, self).__init__(parent)
         self.setupUi(self)
         self.Button_open_img.clicked.connect(self.get_img)  # 选择图片绑定事件
+        self.Button_open_file.clicked.connect(self.get_file)
+
+    def get_file(self):
+        directory = QFileDialog.getExistingDirectory(None, "选取文件夹", "D:/Tree/exp")  # 起始路径
+        self.file_url.setText(directory)
 
     def get_img(self):
         global path
@@ -69,7 +74,7 @@ class Logic_create(QDialog, Ui_Create_Dialog):
         worksheet1.write(1, 2, self.textEdit.toPlainText())
         print(self.textEdit.toPlainText())
         worksheet1.write(1, 3, 0)
-        workbook.save('D:/Tree/exp/'+img_name+'.xls')
+        workbook.save(self.file_url.text()+'/'+img_name+'.xls')
         self.close()
     def get_path(self):
         return path

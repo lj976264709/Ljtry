@@ -77,7 +77,8 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         global filepath, img
         path, _ = QFileDialog.getOpenFileName(None, '选择文件', "D:/Tree/exp", "xls Files(*.xls)")  # 打开资源管理器，path绝对路径
         filepath = path
-
+        if path=='':
+            return
         # print(filepath)
         workbook = xlrd.open_workbook(path)
         sheet1 = workbook.sheet_by_index(0)
