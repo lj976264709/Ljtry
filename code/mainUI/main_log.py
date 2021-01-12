@@ -10,6 +10,7 @@ from Check_log import Check_logic
 from Create_exp import Ui_Create_Dialog
 from Create_logic import Logic_create
 from Visual_log import Visual_logic
+from config_log import logic_config
 from mainUI import Ui_MainWindow
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -29,6 +30,27 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         self.expBT.clicked.connect(self.jump_to_add)  #
         self.mushiBT.clicked.connect(self.jump_to_mushi)  #
         self.RN.clicked.connect(self.get_table)
+        self.Config.triggered.connect(self.jump_to_config)
+        self.get_menu()  # 获得实验按钮
+
+    def get_menu(self):
+        xf = xlrd.open_workbook('D:/Tree/config.xls')
+        st = xf.sheet_by_index(0)
+        tp = st.row(0)
+        for i in range(1, len(tp)):
+            if len(tp[i].value) > 0:
+                self.menu_2.addAction(QAction(tp[i].value, self))
+        # 单击任何Qmenu对象，都会发射信号，绑定槽函数
+        self.menu_2.triggered[QAction].connect(self.menu_trigger)
+
+    def menu_trigger(self, wa):
+        if wa.text() == '目视定位':
+            self.jump_to_mushi()
+
+    def jump_to_config(self):
+        log = logic_config()
+        log.show()
+        log.exec_()
 
     def jump_to_mushi(self):
         if len(img) != 0:
@@ -135,7 +157,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         wr_ = st.cell_value(row_list[row], 14)
         la_ = st.cell_value(row_list[row], 15)
         log = Check_logic()
-        log.inti_infor(rt_, wr_, la_,img)  # 传值
+        log.inti_infor(rt_, wr_, la_, img)  # 传值
         log.show()
         log.exec_()
 

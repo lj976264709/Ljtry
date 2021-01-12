@@ -35,6 +35,12 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
 
     def init_algorithm(self):
         self.algorithm_select.clear()
+        xf=xlrd.open_workbook('D:/Tree/config.xls')
+        st=xf.sheet_by_index(0)
+        tp=st.row(2)
+        algorithm.clear()
+        for i in range(1,len(tp)):
+            algorithm[i-1]=tp[i].value
         for k, v in algorithm.items():
             self.algorithm_select.addItem(v, k)
         self.para1.hide()
@@ -54,6 +60,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             self.para2.show()
 
     def init_pretrat(self):
+
         self.pretreatment1.clear()
         self.pretreatment2.clear()
         self.pretreatment3.clear()

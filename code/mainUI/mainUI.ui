@@ -175,7 +175,6 @@
     <property name="title">
      <string>实验</string>
     </property>
-    <addaction name="action"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -186,6 +185,7 @@
     <property name="title">
      <string>系统配置</string>
     </property>
+    <addaction name="Config"/>
    </widget>
    <addaction name="menu_1"/>
    <addaction name="menu_2"/>
@@ -206,6 +206,11 @@
   <action name="action">
    <property name="text">
     <string>植被提取</string>
+   </property>
+  </action>
+  <action name="Config">
+   <property name="text">
+    <string>实验设置</string>
    </property>
   </action>
  </widget>
