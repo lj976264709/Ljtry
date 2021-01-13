@@ -27,7 +27,7 @@ last_list = []
 bianma_ = '预处理算法编码： '
 b_code=''
 yuchuli = []
-
+roww=0
 
 class Logic_add(QDialog, Ui_add_exp_dialog):
 
@@ -196,6 +196,8 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         wsheet.write(row, 14, str(wrong_list))
         wsheet.write(row, 15, str(last_list))
         wb.save(path)
+        global roww
+        roww=row
 
     def set_url(self, img_, f_url):
         global img, path
@@ -208,6 +210,6 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     def do_pretreatment(self):
         xf=xlrd.open_workbook(path)
         st=xf.sheet_by_index(0)
-        pre_url=st.cell_value(1,5)+'\\'+st.cell_value(1,0)+'_pre.tif'
+        pre_url=st.cell_value(1,5)+'\\'+st.cell_value(1,0)+'_'+str(roww)+'_pre.tif'
         images = cv2.imread(img)
         cv2.imwrite(pre_url, images)

@@ -60,6 +60,8 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
             log.getImgURL(img)  # 其实应该是set url
             log.show()
             log.exec_()
+            ms=xlrd.open_workbook(filepath).sheet_by_index(0).cell_value(1,3)
+            self.isMushi.setText('目视数量' + str(int(ms)))
 
     def jump_to_add(self):
         log = Logic_add()

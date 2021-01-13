@@ -24,15 +24,15 @@ class Check_logic(QDialog, Ui_Dialog_Check):
         rb = xlrd.open_workbook(filepath)
         st = rb.sheet_by_index(0)
         sf = rb.sheet_by_index(1)
-        result_url = st.cell_value(1, 6) + '\\' + st.cell_value(1, 0) + '_Compared.jpg'
-        result_url_js = st.cell_value(1, 6) + '\\' + st.cell_value(1, 0) + '_js.jpg'
-        copyfile('D:/66.jpg', result_url)
+        result_url = st.cell_value(1, 6) + '\\' + st.cell_value(1, 0) + '_' + str(hang) + '_Compared.jpg'
+        result_url_js = st.cell_value(1, 6) + '\\' + st.cell_value(1, 0) + '_' + str(hang) + '_js.jpg'
+
         self.description.setText(st.cell_value(1, 0) + '目视机视对比')
         hang = int(hang)
-        self.description_3.setText('准确率:' + str(round(float(sf.cell_value(hang, 8))*100, 3)) +
-                                   '   漏判率:' + str(round(float(sf.cell_value(hang, 9))*100, 3)) +
-                                   '   误判率:' + str(round(float(sf.cell_value(hang, 10))*100, 3)) +
-                                   '   匹配率:' + str(round(float(sf.cell_value(hang, 11))*100, 3)))
+        self.description_3.setText('准确率:' + str(round(float(sf.cell_value(hang, 8)) * 100, 3)) +
+                                   '   漏判率:' + str(round(float(sf.cell_value(hang, 9)) * 100, 3)) +
+                                   '   误判率:' + str(round(float(sf.cell_value(hang, 10)) * 100, 3)) +
+                                   '   匹配率:' + str(round(float(sf.cell_value(hang, 11)) * 100, 3)))
         self.description_2.setText(" ○ 为正确标记，╳ 为错误标记，■ 为漏判：")
         global right_list, wrong_list, last_list, img_url
         right_list = eval(a)
@@ -41,6 +41,7 @@ class Check_logic(QDialog, Ui_Dialog_Check):
         img_url = url
         image_mark.Image_mark.mark_function_2(right_list, wrong_list, last_list, img_url, result_url_js)
         print(img_url)
+        copyfile('D:/66.jpg', result_url)
         tp = QPixmap('D:/66.jpg')
         if tp.height() * 651 / tp.width() > 1021:
             self.img__.setPixmap(tp.scaled(self.img__.width(), tp.height() * self.img__.width() / tp.width()))
