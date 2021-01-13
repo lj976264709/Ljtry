@@ -122,7 +122,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
 
         self.tableView.setModel(self.model)
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.tableView.setColumnWidth(1,200)
+        self.tableView.setColumnWidth(1, 200)
         for i in range(0, r_rows):
             self.tableView.setIndexWidget(self.model.index(i, 11), self.buttonForRow())
 
@@ -161,7 +161,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         wr_ = st.cell_value(row_list[row], 14)
         la_ = st.cell_value(row_list[row], 15)
         log = Check_logic()
-        log.inti_infor(rt_, wr_, la_, img)  # 传值
+        log.inti_infor(rt_, wr_, la_, img, filepath)  # 传值
         log.show()
         log.exec_()
 

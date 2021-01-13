@@ -1,4 +1,7 @@
+from shutil import copyfile
+
 from PyQt5.QtWidgets import QDialog
+import xlrd
 
 import image_mark
 from Check_result import Ui_Dialog_Check
@@ -16,9 +19,14 @@ class Check_logic(QDialog, Ui_Dialog_Check):
     def __init__(self, parent=None):
         super(Check_logic, self).__init__(parent)
 
-    def inti_infor(self, a, b, c, url):
+    def inti_infor(self, a, b, c, url, filepath):
         self.setupUi(self)
-        self.description.setText(" ╳ 为错误标记，○ 为正确标记，■ 为漏判：")
+        rb = xlrd.open_workbook(filepath)
+        st = rb.sheet_by_index(0)
+        result_url = st.cell_value(1, 6) + '\\' + st.cell_value(1, 0) + '_Compared.jpg'
+        copyfile('D:/66.jpg', result_url)
+
+        self.description.setText(" ○ 为正确标记，╳ 为错误标记，■ 为漏判：")
         global right_list, wrong_list, last_list, img_url
         right_list = eval(a)
         wrong_list = eval(b)
