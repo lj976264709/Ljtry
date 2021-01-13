@@ -102,9 +102,9 @@
    <widget class="QLabel" name="isMushi">
     <property name="geometry">
      <rect>
-      <x>670</x>
+      <x>560</x>
       <y>30</y>
-      <width>101</width>
+      <width>211</width>
       <height>51</height>
      </rect>
     </property>
@@ -117,6 +117,9 @@
     <property name="text">
      <string>目视情况</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
    </widget>
    <widget class="QPushButton" name="mushiBT">
     <property name="geometry">
@@ -128,7 +131,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>目视操作</string>
+     <string>目视定位</string>
     </property>
    </widget>
    <widget class="QPushButton" name="RN">

@@ -10,7 +10,13 @@ class Image_mark:
             cv2.circle(images, (int(list[i][0]), int(list[i][1])), 1, (255, 0, 0), 4)
         cv2.imwrite('D:/23.jpg', images)  # 写入标记后的图
 
-    def mark_function_2(right_list, wrong_list, last_list, url):  # 对比结果标记
+    def mark_function_2(right_list, wrong_list, last_list, url,js_url):  # 对比结果标记
+        images_js=cv2.imread(url)
+        for i in range(len(right_list)):
+            cv2.circle(images_js, (int(right_list[i][0]), int(right_list[i][1])), 1, (255, 0, 0), 2)
+        for i in range(len(wrong_list)):
+            cv2.circle(images_js, (int(wrong_list[i][0]), int(wrong_list[i][1])), 1, (255, 0, 0), 2)
+        cv2.imwrite(js_url,images_js)
         images = cv2.imread(url)  # 打开原图
         for i in range(len(right_list)):
             cv2.circle(images, (int(right_list[i][0]), int(right_list[i][1])), 1, (255, 0, 0), 2)

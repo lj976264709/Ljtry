@@ -88,11 +88,11 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         self.lineEdit.setText(sheet1.row(1)[0].value)
         self.textEdit.setText(sheet1.row(1)[2].value)
         ms = sheet1.row(1)[3].value
-
+        print(ms)
         if ms == '0':
-            self.isMushi.setText("目视未完成")
+            self.isMushi.setText("未进行目视")
         else:
-            self.isMushi.setText("目视已完成")
+            self.isMushi.setText('目视数量'+str(int(ms)))
         self.get_table()
 
     def get_table(self):
