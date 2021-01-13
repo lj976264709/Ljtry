@@ -92,7 +92,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         if ms == '0':
             self.isMushi.setText("未进行目视")
         else:
-            self.isMushi.setText('目视数量'+str(int(ms)))
+            self.isMushi.setText('目视数量' + str(int(ms)))
         self.get_table()
 
     def get_table(self):
@@ -161,7 +161,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         wr_ = st.cell_value(row_list[row], 14)
         la_ = st.cell_value(row_list[row], 15)
         log = Check_logic()
-        log.inti_infor(rt_, wr_, la_, img, filepath)  # 传值
+        log.inti_infor(rt_, wr_, la_, img, filepath, row_list[row])  # 传值
         log.show()
         log.exec_()
 

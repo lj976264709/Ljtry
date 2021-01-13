@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1110</width>
-    <height>803</height>
+    <width>1117</width>
+    <height>875</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,42 @@
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>30</y>
+     <y>0</y>
+     <width>971</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Adobe Arabic</family>
+     <pointsize>26</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>description</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="img__">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>120</y>
+     <width>1021</width>
+     <height>651</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="description_2">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>800</y>
      <width>971</width>
      <height>51</height>
     </rect>
@@ -25,24 +60,36 @@
    <property name="font">
     <font>
      <family>Adobe Arabic</family>
-     <pointsize>36</pointsize>
+     <pointsize>24</pointsize>
     </font>
    </property>
    <property name="text">
     <string>description</string>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
   </widget>
-  <widget class="QLabel" name="img__">
+  <widget class="QLabel" name="description_3">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>110</y>
-     <width>1021</width>
-     <height>651</height>
+     <x>80</x>
+     <y>60</y>
+     <width>971</width>
+     <height>31</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Adobe 黑体 Std R</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string>description</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>
