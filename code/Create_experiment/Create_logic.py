@@ -41,10 +41,6 @@ class Logic_create(QDialog, Ui_Create_Dialog):
 
     def accept(self):  # 1’
         global path
-        # log =Visual_logic()
-        # log.getImgURL(path)
-        # log.show()
-        # log.exec_()
         print("ss")
         workbook = xlwt.Workbook(encoding='utf-8')
         worksheet1 = workbook.add_sheet('detail')

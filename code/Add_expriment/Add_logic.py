@@ -1,6 +1,7 @@
 import math
 import time
 
+import cv2
 import xlrd  # 导入模块
 from xlutils.copy import copy  # 导入copy模块
 from PyQt5.QtCore import pyqtSlot
@@ -24,7 +25,7 @@ right_list = []
 wrong_list = []
 last_list = []
 bianma_ = '预处理算法编码： '
-
+b_code=''
 yuchuli = []
 
 
@@ -36,6 +37,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         self.Button_renew.clicked.connect(self.init_pretratment)  # 绑定预处理重置按
         self.init_algorithm()  # 初始化处理算法
         self.init_pretratment()
+
 
     def init_pretratment(self):
         yuchuli.clear()
@@ -85,6 +87,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             for i in range(len(yuchuli)):
                 if yuchuli[i].startswith(tx):
                     yuchuli.pop(i)
+        global b_code
         b_code = ''
         for i in yuchuli:
             b_code = b_code + i + '+'
@@ -176,16 +179,18 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         wsheet = wb.get_sheet(1)
         wsheet.write(row, 0, str(row))
         wsheet.write(row, 1, str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))
-        wsheet.write(row, 2, self.pretreatment1.currentText())
-        wsheet.write(row, 3, self.pretreatment2.currentText())
-        wsheet.write(row, 4, self.pretreatment3.currentText())
-        wsheet.write(row, 5, self.pretreatment4.currentText())
-        wsheet.write(row, 6, self.algorithm_select.currentText() + '_' + self.para1.text() + '_' + self.para2.text())
-        wsheet.write(row, 7, str(len(right_list) + len(wrong_list)))
-        wsheet.write(row, 8, str(len(right_list)))
-        wsheet.write(row, 9, str(len(wrong_list)))
-        wsheet.write(row, 10, str(len(last_list)))
-        wsheet.write(row, 11, str(len(right_list) / (len(right_list) + len(wrong_list))))
+        wsheet.write(row, 2, b_code)
+        wsheet.write(row, 3, self.algorithm_select.currentText() + '_' + self.para1.text() + '_' + self.para2.text())
+        wsheet.write(row, 4, str(len(right_list) + len(wrong_list)))
+        wsheet.write(row, 5, str(len(right_list)))
+        wsheet.write(row, 6, str(len(wrong_list)))
+        wsheet.write(row, 7, str(len(last_list)))
+
+        wsheet.write(row, 8, str(len(right_list) / (len(right_list) + len(wrong_list))))
+        wsheet.write(row, 9, str(len(wrong_list) / (len(right_list) + len(wrong_list))))
+        wsheet.write(row, 10, str(len(last_list)/len(ans)))
+        wsheet.write(row, 11, str(len(right_list) / (len(right_list) + len(wrong_list)+len(last_list))))
+
         wsheet.write(row, 12, str(ans))
         wsheet.write(row, 13, str(right_list))
         wsheet.write(row, 14, str(wrong_list))
@@ -201,4 +206,8 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         return path
 
     def do_pretreatment(self):
-        return path
+        xf=xlrd.open_workbook(path)
+        st=xf.sheet_by_index(0)
+        pre_url=st.cell_value(1,5)+'\\'+st.cell_value(1,0)+'_pre.tif'
+        images = cv2.imread(img)
+        cv2.imwrite(pre_url, images)

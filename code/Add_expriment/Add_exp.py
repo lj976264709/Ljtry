@@ -77,6 +77,8 @@ class Ui_add_exp_dialog(object):
         self.bianma.setObjectName("bianma")
 
         self.retranslateUi(add_exp_dialog)
+        self.buttonBox.accepted.connect(add_exp_dialog.accept)
+        self.buttonBox.rejected.connect(add_exp_dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(add_exp_dialog)
 
     def retranslateUi(self, add_exp_dialog):
