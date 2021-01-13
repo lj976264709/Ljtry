@@ -77,7 +77,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         global filepath, img
         path, _ = QFileDialog.getOpenFileName(None, '选择文件', "D:/Tree/exp", "xls Files(*.xls)")  # 打开资源管理器，path绝对路径
         filepath = path
-        if path=='':
+        if path == '':
             return
         # print(filepath)
         workbook = xlrd.open_workbook(path)
@@ -96,9 +96,9 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         self.get_table()
 
     def get_table(self):
-        self.model = QStandardItemModel(12, 13)
-        titles = ['创建时间', '预处理1', '预处理2', '预处理3', '预处理4', '算法', '识别树木数量', '正确识别数量', '错判单木数目', '漏判单木数目', '识别精度',
-                  '操作', ' ']
+        self.model = QStandardItemModel(12, 12)
+        titles = ['创建时间', '预处理', '单木定位算法', '识别树木数量', '正确识别数量', '错判单木数目', '漏判单木数目', '准确率', '漏判率', '误判率', '匹配率',
+                  ' ']
         self.model.setHorizontalHeaderLabels(titles)
         # self.model.setItem(1,0,QStandardItem("hh"))
 
@@ -111,15 +111,18 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         r_rows = 0
         for i in range(1, rows):
             if st.cell_value(i, 0) != '*':
-                for j in range(1, 11):
-                    self.model.setItem(r_rows, j - 1, QStandardItem(st.cell_value(i, j)))
-                Precision = float(st.cell_value(i, 11)) * 100
-                self.model.setItem(r_rows, 11 - 1, QStandardItem(str(round(Precision, 3))))
+                for j in range(1, 12):
+                    if j > 7:
+                        tp = float(st.cell_value(i, j)) * 100
+                        self.model.setItem(r_rows, j - 1, QStandardItem(str(round(tp, 3))))
+                    else:
+                        self.model.setItem(r_rows, j - 1, QStandardItem(st.cell_value(i, j)))
                 row_list.append(i)
                 r_rows = r_rows + 1
 
         self.tableView.setModel(self.model)
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tableView.setColumnWidth(1,200)
         for i in range(0, r_rows):
             self.tableView.setIndexWidget(self.model.index(i, 11), self.buttonForRow())
 
