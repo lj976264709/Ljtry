@@ -3,6 +3,7 @@ import sys
 import os
 import sys
 import time
+from shutil import copyfile
 
 import cv2
 from PyQt5.QtWidgets import *
@@ -84,10 +85,14 @@ class Visual_logic(QDialog, Ui_Visual):
     def finish_mark(self):
 
         rb = xlrd.open_workbook(filepath)
+        st=rb.sheet_by_index(0)
+        result_url = st.cell_value(1, 6) + '\\' + st.cell_value(1, 0) + '_mushi.jpg'
         wb = copy(rb)
         wsheet = wb.get_sheet(0)
         wsheet.write(1, 3, count_num)
         wb.save(filepath)
+
+        copyfile('D:/23.jpg', result_url)
         self.close()
 
     def setFileURL(self,fileurl):
