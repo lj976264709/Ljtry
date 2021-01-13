@@ -109,4 +109,4 @@ class Ui_MainWindow(object):
         self.Create_experiment.setText(_translate("MainWindow", "创建实验"))
         self.Open_experiment.setText(_translate("MainWindow", "打开实验"))
         self.action.setText(_translate("MainWindow", "植被提取"))
-        self.Config.setText(_translate("MainWindow", "实验设置"))
+        self.Config.setText(_translate("MainWindow", "实验配置"))

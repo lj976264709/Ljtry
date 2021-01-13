@@ -213,7 +213,7 @@
   </action>
   <action name="Config">
    <property name="text">
-    <string>实验设置</string>
+    <string>实验配置</string>
    </property>
   </action>
  </widget>
