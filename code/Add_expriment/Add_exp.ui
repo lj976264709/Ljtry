@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>709</width>
-    <height>656</height>
+    <width>713</width>
+    <height>607</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,20 +17,26 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>40</y>
-     <width>81</width>
-     <height>16</height>
+     <y>35</y>
+     <width>541</width>
+     <height>21</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Adobe Arabic</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
    <property name="text">
-    <string>预处理算法：</string>
+    <string>预处理算法：（注意算法顺序）</string>
    </property>
   </widget>
   <widget class="QLabel" name="para_type2">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>410</y>
+     <x>370</x>
+     <y>500</y>
      <width>101</width>
      <height>16</height>
     </rect>
@@ -42,34 +48,14 @@
   <widget class="QLabel" name="para_type1">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>370</y>
+     <x>370</x>
+     <y>460</y>
      <width>101</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
     <string>参数1 ：</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="pretreatment3">
-   <property name="geometry">
-    <rect>
-     <x>330</x>
-     <y>580</y>
-     <width>101</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="pretreatment4">
-   <property name="geometry">
-    <rect>
-     <x>450</x>
-     <y>580</y>
-     <width>101</width>
-     <height>22</height>
-    </rect>
    </property>
   </widget>
   <widget class="QPushButton" name="Button_renew">
@@ -89,20 +75,26 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>370</y>
-     <width>101</width>
-     <height>16</height>
+     <y>450</y>
+     <width>141</width>
+     <height>31</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Adobe Arabic</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
    <property name="text">
-    <string>单木提取算法：</string>
+    <string>单木定位算法：</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="para2">
    <property name="geometry">
     <rect>
-     <x>430</x>
-     <y>410</y>
+     <x>470</x>
+     <y>500</y>
      <width>113</width>
      <height>20</height>
     </rect>
@@ -111,10 +103,10 @@
   <widget class="QComboBox" name="algorithm_select">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>370</y>
+     <x>160</x>
+     <y>450</y>
      <width>131</width>
-     <height>22</height>
+     <height>31</height>
     </rect>
    </property>
    <item>
@@ -128,33 +120,13 @@
     </property>
    </item>
   </widget>
-  <widget class="QComboBox" name="pretreatment2">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>580</y>
-     <width>101</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLineEdit" name="para1">
    <property name="geometry">
     <rect>
-     <x>430</x>
-     <y>370</y>
+     <x>470</x>
+     <y>460</y>
      <width>113</width>
      <height>20</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="pretreatment1">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>580</y>
-     <width>101</width>
-     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -162,7 +134,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>340</y>
+     <y>430</y>
      <width>631</width>
      <height>16</height>
     </rect>
@@ -175,7 +147,7 @@
    <property name="geometry">
     <rect>
      <x>520</x>
-     <y>490</y>
+     <y>550</y>
      <width>156</width>
      <height>23</height>
     </rect>
@@ -194,6 +166,31 @@
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_list"/>
+  </widget>
+  <widget class="QLabel" name="bianma">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>360</y>
+     <width>641</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Adobe Arabic</family>
+     <pointsize>14</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
   </widget>
  </widget>
  <resources/>

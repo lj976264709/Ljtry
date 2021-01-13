@@ -5,7 +5,8 @@ import xlrd  # 导入模块
 from xlutils.copy import copy  # 导入copy模块
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QImage, QFont
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QDialog, QRadioButton, QButtonGroup, QCheckBox
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QDialog, QRadioButton, QButtonGroup, QCheckBox, QInputDialog
 import matlab.engine
 import CV
 from Add_exp import Ui_add_exp_dialog
@@ -14,7 +15,7 @@ pretreat = {0: '无', 10: '植被提取', 23: '均值滤波3*3', 25: '均值滤�
             33: '中值滤波3*3', 35: '中值滤波5*5', 37: '中值滤波7*7',
             43: '高斯滤波3*3', 45: '高斯滤波5*5', 47: '高斯滤波7*7'}
 vis = []
-names=[]
+names = []
 algorithm = {0: '请选择', 1: 'CV算法'}
 
 path = ""
@@ -22,6 +23,9 @@ img = ""
 right_list = []
 wrong_list = []
 last_list = []
+bianma_ = '预处理算法编码： '
+
+yuchuli = []
 
 
 class Logic_add(QDialog, Ui_add_exp_dialog):
@@ -29,40 +33,74 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     def __init__(self, parent=None):
         super(Logic_add, self).__init__(parent)
         self.setupUi(self)
-        self.init_pretrat()  # 初始化预处理下拉选项
-        self.Button_renew.clicked.connect(self.init_pretrat)  # 绑定预处理重置按
+        self.Button_renew.clicked.connect(self.init_pretratment)  # 绑定预处理重置按
         self.init_algorithm()  # 初始化处理算法
         self.init_pretratment()
 
     def init_pretratment(self):
+        yuchuli.clear()
+        self.bianma.setText(bianma_)
         positions = [(i, j) for i in range(10) for j in range(4)]
         xf = xlrd.open_workbook('D:/Tree/config.xls')
         st = xf.sheet_by_index(0)
         tp = st.row(1)
         global names
-        names=[]
-        for i in range(1,len(tp)):
+        names = []
+        for i in range(1, len(tp)):
             names.append(tp[i].value)
         font = QFont()
         font.setBold(True)  # 加粗
         font.setPointSize(16)
         for position, name in zip(positions, names):
-            tp=QCheckBox(name)
+            tp = QCheckBox(name)
             tp.stateChanged.connect(self.check_op)
             tp.setFont(font)
-            self.gridLayout_list.addWidget(tp,*position)
+            self.gridLayout_list.addWidget(tp, *position)
 
     def check_op(self):
-        tp=self.sender()
-        print(tp.text())
+        global yuchuli
+        tp = self.sender()
+        if tp.checkState() == Qt.Checked:
+            tx = tp.text()
+            print('9' + tx)
+            if tx[-1] == '.':
+                text, ok = QInputDialog.getText(self, "参数", "请输入预处理参数，多个以空格隔开：")
+                if ok:
+                    canshu = text.split()
+                    txx = tx[:-1]
+                    for i in canshu:
+                        txx = txx + '_' + i
+                    yuchuli.append(txx)
+                else:
+                    tp.setCheckState(Qt.Unchecked)
+                    return
+            else:
+                yuchuli.append(tx)
+        else:
+            print(yuchuli)
+            tx = tp.text()
+            if tx[-1] == '.':
+                tx = tx[:-1]
+
+            for i in range(len(yuchuli)):
+                if yuchuli[i].startswith(tx):
+                    yuchuli.pop(i)
+        b_code = ''
+        for i in yuchuli:
+            b_code = b_code + i + '+'
+        b_code = b_code[:-1]
+        self.bianma.setText(bianma_ + b_code)
+
     def init_algorithm(self):
         self.algorithm_select.clear()
-        xf=xlrd.open_workbook('D:/Tree/config.xls')
-        st=xf.sheet_by_index(0)
-        tp=st.row(2)
+        xf = xlrd.open_workbook('D:/Tree/config.xls')
+        st = xf.sheet_by_index(0)
+        tp = st.row(2)
         algorithm.clear()
-        for i in range(1,len(tp)):
-            algorithm[i-1]=tp[i].value
+        algorithm[0] = '无'
+        for i in range(1, len(tp)):
+            if len(tp[i].value) > 0:
+                algorithm[i] = tp[i].value
         for k, v in algorithm.items():
             self.algorithm_select.addItem(v, k)
         self.para1.hide()
@@ -72,51 +110,17 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
 
     @pyqtSlot(int)
     def on_algorithm_select_activated(self, index):
-        tp = self.algorithm_select.itemData(index)
-        if tp == 1:
+        tp = self.algorithm_select.itemText(index)
+        if tp[-1] == '.':
+            tp = tp[:-1]
+
+        if tp == 'CV算法':
             self.para_type1.setText('迭代次数:')
             self.para_type2.setText('膨胀收缩系数:')
             self.para_type1.show()
             self.para_type2.show()
             self.para1.show()
             self.para2.show()
-
-    def init_pretrat(self):
-
-        self.pretreatment1.clear()
-        self.pretreatment2.clear()
-        self.pretreatment3.clear()
-        self.pretreatment4.clear()
-        vis.clear()
-        for k, v in pretreat.items():
-            self.pretreatment1.addItem(v, k)
-
-    @pyqtSlot(int)
-    def on_pretreatment1_activated(self, index):
-        vv = self.pretreatment1.itemData(index)
-        vv = vv / 10
-        vis.append(math.floor(vv))
-        for k, v in pretreat.items():
-            if math.floor(k / 10) != math.floor(vv):
-                self.pretreatment2.addItem(v, k)
-
-    @pyqtSlot(int)
-    def on_pretreatment2_activated(self, index):
-        vv = self.pretreatment2.itemData(index)
-        vv = vv / 10
-        vis.append(math.floor(vv))
-        for k, v in pretreat.items():
-            if not math.floor(k / 10) in vis:
-                self.pretreatment3.addItem(v, k)
-
-    @pyqtSlot(int)
-    def on_pretreatment3_activated(self, index):
-        vv = self.pretreatment3.itemData(index)
-        vv = vv / 10
-        vis.append(math.floor(vv))
-        for k, v in pretreat.items():
-            if not math.floor(k / 10) in vis:
-                self.pretreatment4.addItem(v, k)
 
     def accept(self):  # 1’
         tp = self.do_pretreatment()
