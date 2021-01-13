@@ -1,6 +1,7 @@
 import math
+import os
 from shutil import copyfile
-
+from pathlib import Path
 import xlrd
 import xlwt
 import cv2
@@ -11,11 +12,11 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog, QDialog
 from Create_exp import Ui_Create_Dialog
 from Visual_log import Visual_logic
 
-header1 = ['实验名称', '图像地址', '描述', '目视定位', '目视点对']
-header2 = ['编号', '创建时间', '预处理1', '预处理2', '预处理3', '预处理4',
-           '算法', '识别树木数量', '正确识别数量', '错判单木数目', '漏判单木数目', '识别精度', '点对']
+header1 = ['实验名称', '图像地址', '描述', '目视定位', '目视点对','预处理文件夹','结果文件夹']
+header2 = ['编号', '创建时间', '预处理编码',
+           '算法', '识别树木数量', '正确识别数量', '错判单木数目', '漏判单木数目', '准确率','漏判率','误判率','匹配率', '点对']
 path = ""
-
+directory=''
 
 class Logic_create(QDialog, Ui_Create_Dialog):
 
@@ -26,6 +27,7 @@ class Logic_create(QDialog, Ui_Create_Dialog):
         self.Button_open_file.clicked.connect(self.get_file)
 
     def get_file(self):
+        global directory
         directory = QFileDialog.getExistingDirectory(None, "选取文件夹", "D:/Tree/exp")  # 起始路径
         self.file_url.setText(directory)
 
@@ -54,19 +56,38 @@ class Logic_create(QDialog, Ui_Create_Dialog):
         # images = cv2.imread(path)  # 打开原图
         pr_path=path #记录一下源地址
         img_name = ""
+        img_name_all=''
         for i in range(len(path)):
             if path[len(path) - 1 - i] == '/':
                 path = path[len(path) - 1 - i:]
                 img_name = path[1:]
+                img_name_all=img_name
                 break
         for i in range(len(img_name)):
-            if img_name[i]=='.':
-                img_name=img_name[0:i]
+            if img_name[len(img_name)-1-i]=='.':
+                img_name=img_name[0:len(img_name)-1-i]
                 break
         print(img_name)
+        # wenjianjia
+        wjj=directory.split('/')
+        wj=wjj[-1]
+        print(wj)
+        # wenjianjia
+        my_file = Path('D:/Tree/img/'+wj)
+        my_file_pre = Path('D:/Tree/img/' + wj+'_pretreat')
+        my_file_result =Path('D:/Tree/img/' + wj+'_reslut')
+        if not my_file.exists():
+            os.makedirs(my_file)
+        if not my_file_pre.exists():
+            os.makedirs(my_file_pre)
+        if not my_file_result.exists():
+            os.makedirs(my_file_result)
+        # print(path)
+        # print(my_file)
+        path = str(my_file) + '\\' + img_name_all
+        # print(path)
+        copyfile(pr_path, path)# 原图片备份,使用备份图片作为存储地址//1.4日修改
 
-        copyfile(pr_path, 'D:/Tree/img' + path)# 原图片备份,使用备份图片作为存储地址//1.4日修改
-        path = "D:/Tree/img" + path
 
         # cv2.imwrite(path, images)
         worksheet1.write(1, 0, img_name)
@@ -74,7 +95,10 @@ class Logic_create(QDialog, Ui_Create_Dialog):
         worksheet1.write(1, 2, self.textEdit.toPlainText())
         print(self.textEdit.toPlainText())
         worksheet1.write(1, 3, 0)
+        worksheet1.write(1, 5, str(my_file_pre))
+        worksheet1.write(1, 6, str(my_file_result))
         workbook.save(self.file_url.text()+'/'+img_name+'.xls')
         self.close()
+
     def get_path(self):
         return path
