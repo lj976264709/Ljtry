@@ -215,6 +215,6 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     def do_pretreatment(self):
         xf=xlrd.open_workbook(path)
         st=xf.sheet_by_index(0)
-        pre_url=st.cell_value(1,5)+'\\'+st.cell_value(1,0)+'_'+(str(roww)+1)+'_pre.tif'
+        pre_url=st.cell_value(1,5)+'\\'+st.cell_value(1,0)+'_'+(str(roww+1))+'_pre.tif'
         images = cv2.imread(img)
         cv2.imwrite(pre_url, images)
