@@ -158,10 +158,10 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>50</y>
-     <width>171</width>
-     <height>51</height>
+     <x>70</x>
+     <y>30</y>
+     <width>921</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="font">
@@ -172,6 +172,9 @@
    </property>
    <property name="text">
     <string>实验配置</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QPushButton" name="pB_delete1">
