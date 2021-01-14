@@ -33,7 +33,7 @@ class Check_logic(QDialog, Ui_Dialog_Check):
                                    '%   漏判率:' + str(round(float(sf.cell_value(hang, 9)) * 100, 3)) +
                                    '%   误判率:' + str(round(float(sf.cell_value(hang, 10)) * 100, 3)) +
                                    '%   匹配率:' + str(round(float(sf.cell_value(hang, 11)) * 100, 3))+'%')
-        self.description_2.setText(" ○ 为正确标记，╳ 为错误标记，■ 为漏判：")
+        self.description_2.setText(" ○ 为正确标记，╳ 为错判标记，■ 为漏判标记")
         global right_list, wrong_list, last_list, img_url
         right_list = eval(a)
         wrong_list = eval(b)
