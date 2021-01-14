@@ -135,8 +135,11 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         # if self.algorithm_select.currentText() == 'CV算法':
         #     ans=CV.cv.get_cv(img, int(a), float(b))
         ans = CV.cv.get_cv('D:/shaoxing0.6m_gauss.tif', 5, 0.1)
+        print('yes')
         self.ans_compare(ans)  # 目视和计算结果的对比
+        print('yes')
         self.write_ans(ans)  # 把结果写入文件
+        print('yes')
         self.close()
 
     def distance(self, pa, pb):
@@ -145,6 +148,8 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     def ans_compare(self, ans):
         xf = xlrd.open_workbook(path)
         ms = xf.sheet_by_index(0).cell_value(1, 4)
+        if len(ms)==0:
+            ms='[]'
         ms_list = eval(ms)
         ans_list = eval(str(ans))
         global right_list, wrong_list, last_list
@@ -210,6 +215,6 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     def do_pretreatment(self):
         xf=xlrd.open_workbook(path)
         st=xf.sheet_by_index(0)
-        pre_url=st.cell_value(1,5)+'\\'+st.cell_value(1,0)+'_'+str(roww)+'_pre.tif'
+        pre_url=st.cell_value(1,5)+'\\'+st.cell_value(1,0)+'_'+(str(roww)+1)+'_pre.tif'
         images = cv2.imread(img)
         cv2.imwrite(pre_url, images)
