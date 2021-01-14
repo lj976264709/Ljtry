@@ -133,7 +133,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>选择实验目录</string>
+    <string>选择实验地区</string>
    </property>
   </widget>
  </widget>

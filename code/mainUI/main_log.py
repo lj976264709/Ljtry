@@ -37,6 +37,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         xf = xlrd.open_workbook('D:/Tree/config.xls')
         st = xf.sheet_by_index(0)
         tp = st.row(0)
+        self.menu_2.clear()
         for i in range(1, len(tp)):
             if len(tp[i].value) > 0:
                 self.menu_2.addAction(QAction(tp[i].value, self))
@@ -51,6 +52,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         log = logic_config()
         log.show()
         log.exec_()
+        self.get_menu()
 
     def jump_to_mushi(self):
         if len(img) != 0:

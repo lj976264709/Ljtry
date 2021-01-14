@@ -66,7 +66,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             tx = tp.text()
             print('9' + tx)
             if tx[-1] == '.':
-                text, ok = QInputDialog.getText(self, "参数", "请输入预处理参数，多个以空格隔开：")
+                text, ok = QInputDialog.getText(self, tx+'算法参数', "请输入预处理参数，多个以空格隔开：")
                 if ok:
                     canshu = text.split()
                     txx = tx[:-1]

@@ -62,4 +62,4 @@ class Ui_Create_Dialog(object):
         self.img_type.setItemText(0, _translate("Create_Dialog", "可见光图像"))
         self.img_type.setItemText(1, _translate("Create_Dialog", "卫星遥感图像"))
         self.img_type.setItemText(2, _translate("Create_Dialog", "无人机影像"))
-        self.Button_open_file.setText(_translate("Create_Dialog", "选择实验目录"))
+        self.Button_open_file.setText(_translate("Create_Dialog", "选择实验地区"))
