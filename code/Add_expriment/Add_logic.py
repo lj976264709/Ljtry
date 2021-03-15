@@ -18,9 +18,11 @@ pretreat = {0: '无', 10: '植被提取', 23: '均值滤波3*3', 25: '均值滤�
 vis = []
 names = []
 algorithm = {0: '请选择', 1: 'CV算法'}
-
+num_cs = {}
+name_cs = {}
 path = ""
 img = ""
+img_after_pretreat = ""
 right_list = []
 wrong_list = []
 last_list = []
@@ -41,15 +43,17 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
 
     def init_pretratment(self):
         yuchuli.clear()
+        num_cs.clear()
         self.bianma.setText(bianma_)
         positions = [(i, j) for i in range(10) for j in range(4)]
         xf = xlrd.open_workbook('D:/Tree/config.xls')
-        st = xf.sheet_by_index(0)
-        tp = st.row(1)
+        st = xf.sheet_by_index(1)
         global names
         names = []
-        for i in range(1, len(tp)):
-            names.append(tp[i].value)
+        for i in range(1, st.nrows):
+            names.append(st.cell_value(i, 2))
+            num_cs[st.cell_value(i, 2)] = int(st.cell_value(i, 3))
+
         font = QFont()
         font.setBold(True)  # 加粗
         font.setPointSize(16)
@@ -58,6 +62,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             tp.stateChanged.connect(self.check_op)
             tp.setFont(font)
             self.gridLayout_list.addWidget(tp, *position)
+        print('ok')
 
     def check_op(self):
         global yuchuli
@@ -65,14 +70,14 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         if tp.checkState() == Qt.Checked:
             tx = tp.text()
             print('9' + tx)
-            if tx[-1] == '.':
+            # if tx[-1] == '.':
+            if num_cs[tx] > 0:
                 text, ok = QInputDialog.getText(self, tx + '算法参数', "请输入预处理参数，多个以空格隔开：")
                 if ok:
                     canshu = text.split()
-                    txx = tx[:-1]
                     for i in canshu:
-                        txx = txx + '_' + i
-                    yuchuli.append(txx)
+                        tx = tx + '_' + i
+                    yuchuli.append(tx)
                 else:
                     tp.setCheckState(Qt.Unchecked)
                     return
@@ -96,14 +101,20 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
 
     def init_algorithm(self):
         self.algorithm_select.clear()
+        name_cs.clear()
         xf = xlrd.open_workbook('D:/Tree/config.xls')
-        st = xf.sheet_by_index(0)
-        tp = st.row(2)
+        st = xf.sheet_by_index(2)
+
         algorithm.clear()
         algorithm[0] = '无'
-        for i in range(1, len(tp)):
-            if len(tp[i].value) > 0:
-                algorithm[i] = tp[i].value
+        for i in range(1, st.nrows):
+            if len(st.cell_value(i, 2)) > 0:
+                algorithm[i] = st.cell_value(i, 2)
+                csmc = []
+                for j in range(int(st.cell_value(i, 3))):
+                    csmc.append(st.cell_value(i, 4 + j))
+                name_cs[st.cell_value(i, 2)] = csmc
+        # print(name_cs)
         for k, v in algorithm.items():
             self.algorithm_select.addItem(v, k)
         self.para1.hide()
@@ -114,16 +125,17 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     @pyqtSlot(int)
     def on_algorithm_select_activated(self, index):
         tp = self.algorithm_select.itemText(index)
-        if tp[-1] == '.':
-            tp = tp[:-1]
-
-        if tp == 'CV算法':
-            self.para_type1.setText('迭代次数:')
-            self.para_type2.setText('膨胀收缩系数:')
+        if len(name_cs[tp]) == 1:
+            self.para_type1.setText(name_cs[tp][0])
             self.para_type1.show()
-            self.para_type2.show()
             self.para1.show()
+        elif len(name_cs[tp]) == 2:
+            self.para_type1.setText(name_cs[tp][0])
+            self.para1.show()
+            self.para_type1.show()
+            self.para_type2.setText(name_cs[tp][1])
             self.para2.show()
+            self.para_type2.show()
 
     def accept(self):  # 1’
         tp = self.do_pretreatment()
@@ -131,12 +143,12 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         a = self.para1.text()
         b = self.para2.text()
         print(a, b)
-        if self.algorithm_select.currentText() == 'marked_watershed.':
-            ans = CV.cv.get_fenshuiling(img, 1.0)
-        elif self.algorithm_select.currentText() == 'gradient_watershed.':
-            ans = CV.cv.get_fenshuiling_g(img, 1.0, 5)
-        elif self.algorithm_select.currentText() == 'CV算法':
-            ans = CV.cv.get_cv(img, int(a), float(b))
+        if self.algorithm_select.currentText() == '标记分水岭':
+            ans = CV.cv.get_fenshuiling(img_after_pretreat, float(a))#1.0
+        elif self.algorithm_select.currentText() == '梯度分水岭':
+            ans = CV.cv.get_fenshuiling_g(img_after_pretreat, float(a), int(b))# 1.0, 5
+        elif self.algorithm_select.currentText() == 'CV模型':
+            ans = CV.cv.get_cv(img_after_pretreat, int(a), float(b))
         # ans = CV.cv.get_cv('D:/shaoxing0.6m_gauss.tif', 5, 0.1)
         # print(ans)
         print('yes')
@@ -220,6 +232,15 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         xf = xlrd.open_workbook(path)
         st = xf.sheet_by_index(0)
         pre_url = st.cell_value(1, 5) + '\\' + st.cell_value(1, 0) + '_' + (str(roww + 1)) + '_pre.tif'
+        global img_after_pretreat
+        img_after_pretreat = pre_url
         images = cv2.imread(img)
-
+        for i in range(len(yuchuli)):
+            tp = yuchuli[i].split('_')
+            if tp[0] == '高斯滤波':
+                images = cv2.GaussianBlur(images, (int(tp[1]), int(tp[1])), 0)
+            elif tp[0] == '中值滤波':
+                images = cv2.medianBlur(images, int(tp[1]))
+            elif tp[0] == '均值滤波':
+                images = cv2.blur(images, (int(tp[1]), int(tp[1])))
         cv2.imwrite(pre_url, images)

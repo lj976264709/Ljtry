@@ -34,12 +34,15 @@ class logic_config(QDialog, Ui_Config_Dialog):
             if len(st.row(0)[i].value) > 0:
                 list_1.append(st.row(0)[i].value)
 
-        for i in range(1, len(st.row(1))):
-            if len(st.row(1)[i].value) > 0:
-                list_2.append(st.row(1)[i].value)
-        for i in range(1, len(st.row(2))):
-            if len(st.row(2)[i].value) > 0:
-                list_3.append(st.row(2)[i].value)
+        st = xf.sheet_by_index(1)
+        for i in range(1, st.nrows):
+            if len(st.row(i)[2].value) > 0:
+                list_2.append(st.row(i)[2].value)
+
+        st = xf.sheet_by_index(2)
+        for i in range(1, st.nrows):
+            if len(st.row(i)[2].value) > 0:
+                list_3.append(st.row(i)[2].value)
         slm1 = QStringListModel()
         slm1.setStringList(list_1)
         slm2 = QStringListModel()
@@ -90,55 +93,86 @@ class logic_config(QDialog, Ui_Config_Dialog):
         text, ok = QInputDialog.getText(self, "算法输入", "请输入算法名称")
         if ok:
             print(text)
+        else:
+            return
         global list_1
         list_1.append(text)
         slm1 = QStringListModel()
         slm1.setStringList(list_1)
         self.listView.setModel(slm1)
-        self.file_write(0, len(list_1),text)
+        self.file_write(0, len(list_1), text)
 
     def add2(self):
         text, ok = QInputDialog.getText(self, "算法输入", "请输入算法名称")
         if ok:
-            item, okk = QInputDialog.getItem(self, "该算法是否需要参数", "该算法是否需要参数", ['否', '是'], 0, False)
-            if item == '是':
-                text = text + '.'
+            # item, okk = QInputDialog.getItem(self, "该算法是否需要参数", "该算法是否需要参数", ['否', '是'], 0, False)
+            num_cs, okk = QInputDialog.getText(self, "算法输入", text + "所需参数个数")
+            if not okk:
+                return
+        else:
+            return
         global list_2
         list_2.append(text)
         slm2 = QStringListModel()
         slm2.setStringList(list_2)
         self.listView_2.setModel(slm2)
-        self.file_write(1, len(list_2),text)
+        self.file_write(1, len(list_2), text, num_cs)
 
     def add3(self):
         text, ok = QInputDialog.getText(self, "算法输入", "请输入算法名称")
         if ok:
-            item, okk = QInputDialog.getItem(self, "该算法是否需要参数", "该算法是否需要参数", ['否', '是'], 0, False)
-            if item == '是':
-                text = text + '.'
+            # item, okk = QInputDialog.getItem(self, "该算法是否需要参数", "该算法是否需要参数", ['否', '是'], 0, False)
+            num_cs, okk = QInputDialog.getText(self, "算法输入", text + "所需参数个数")
+            if not okk:
+                return
+        else:
+            return
         global list_3
         list_3.append(text)
         slm3 = QStringListModel()
         slm3.setStringList(list_3)
         self.listView_3.setModel(slm3)
-        self.file_write(2, len(list_3),text)
+        self.file_write(2, len(list_3), text, num_cs)
 
-    def file_write(self, x,y, text):
+    def file_write(self, x, y, text, num_cs):
+        if x == 0:
+            rb = xlrd.open_workbook('D:/Tree/config.xls')
+            wb = copy(rb)
+            wsheet = wb.get_sheet(0)
+            wsheet.write(x, y, text)
+            wb.save('D:/Tree/config.xls')
+            return
+
         rb = xlrd.open_workbook('D:/Tree/config.xls')
         wb = copy(rb)
-        wsheet = wb.get_sheet(0)
-        wsheet.write(x, y, text)
+        wsheet = wb.get_sheet(x)
+        wsheet.write(y, 0, y)
+        wsheet.write(y, 2, text)
+        wsheet.write(y, 3, int(num_cs))
         wb.save('D:/Tree/config.xls')
 
     def file_delete(self, x, y):
-        print(x, y)
+        if x == 0:
+            print(x, y)
+            rb = xlrd.open_workbook('D:/Tree/config.xls')
+            tp = rb.sheet_by_index(0).row(x)
+            wb = copy(rb)
+            wsheet = wb.get_sheet(0)
+            print("ss")
+            for i in range(y, len(tp) - 1):
+                wsheet.write(x, i, tp[i + 1].value)
+            wsheet.write(x, len(tp) - 1, '')
+            # wsheet.delete(x, len(tp) - 1)
+            wb.save('D:/Tree/config.xls')
+            return
         rb = xlrd.open_workbook('D:/Tree/config.xls')
-        tp = rb.sheet_by_index(0).row(x)
+        tp = rb.sheet_by_index(x)
         wb = copy(rb)
-        wsheet = wb.get_sheet(0)
+        wsheet = wb.get_sheet(x)
         print("ss")
-        for i in range(y, len(tp) - 1):
-            wsheet.write(x, i, tp[i + 1].value)
-        wsheet.write(x, len(tp) - 1, '')
-        # wsheet.delete(x, len(tp) - 1)
+        for i in range(y, tp.nrows - 1):
+            for j in range(len(tp.row(i + 1))):
+                wsheet.write(i, j, tp.cell_value(i + 1, j))
+        for j in range(len(tp.row(tp.nrows - 1))):
+            wsheet.write(tp.nrows - 1, j, '')
         wb.save('D:/Tree/config.xls')
