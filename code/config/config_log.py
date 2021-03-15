@@ -33,6 +33,7 @@ class logic_config(QDialog, Ui_Config_Dialog):
         for i in range(1, len(st.row(0))):
             if len(st.row(0)[i].value) > 0:
                 list_1.append(st.row(0)[i].value)
+
         for i in range(1, len(st.row(1))):
             if len(st.row(1)[i].value) > 0:
                 list_2.append(st.row(1)[i].value)

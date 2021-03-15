@@ -25,9 +25,10 @@ right_list = []
 wrong_list = []
 last_list = []
 bianma_ = '预处理算法编码： '
-b_code=''
+b_code = ''
 yuchuli = []
-roww=0
+roww = 0
+
 
 class Logic_add(QDialog, Ui_add_exp_dialog):
 
@@ -37,7 +38,6 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         self.Button_renew.clicked.connect(self.init_pretratment)  # 绑定预处理重置按
         self.init_algorithm()  # 初始化处理算法
         self.init_pretratment()
-
 
     def init_pretratment(self):
         yuchuli.clear()
@@ -66,7 +66,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             tx = tp.text()
             print('9' + tx)
             if tx[-1] == '.':
-                text, ok = QInputDialog.getText(self, tx+'算法参数', "请输入预处理参数，多个以空格隔开：")
+                text, ok = QInputDialog.getText(self, tx + '算法参数', "请输入预处理参数，多个以空格隔开：")
                 if ok:
                     canshu = text.split()
                     txx = tx[:-1]
@@ -131,10 +131,14 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         a = self.para1.text()
         b = self.para2.text()
         print(a, b)
-
-        # if self.algorithm_select.currentText() == 'CV算法':
-        #     ans=CV.cv.get_cv(img, int(a), float(b))
-        ans = CV.cv.get_cv('D:/shaoxing0.6m_gauss.tif', 5, 0.1)
+        if self.algorithm_select.currentText() == 'marked_watershed.':
+            ans = CV.cv.get_fenshuiling(img, 1.0)
+        elif self.algorithm_select.currentText() == 'gradient_watershed.':
+            ans = CV.cv.get_fenshuiling_g(img, 1.0, 5)
+        elif self.algorithm_select.currentText() == 'CV算法':
+            ans = CV.cv.get_cv(img, int(a), float(b))
+        # ans = CV.cv.get_cv('D:/shaoxing0.6m_gauss.tif', 5, 0.1)
+        # print(ans)
         print('yes')
         self.ans_compare(ans)  # 目视和计算结果的对比
         print('yes')
@@ -148,8 +152,8 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     def ans_compare(self, ans):
         xf = xlrd.open_workbook(path)
         ms = xf.sheet_by_index(0).cell_value(1, 4)
-        if len(ms)==0:
-            ms='[]'
+        if len(ms) == 0:
+            ms = '[]'
         ms_list = eval(ms)
         ans_list = eval(str(ans))
         global right_list, wrong_list, last_list
@@ -193,8 +197,8 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
 
         wsheet.write(row, 8, str(len(right_list) / (len(right_list) + len(wrong_list))))
         wsheet.write(row, 9, str(len(wrong_list) / (len(right_list) + len(wrong_list))))
-        wsheet.write(row, 10, str(len(last_list)/len(ans)))
-        wsheet.write(row, 11, str(len(right_list) / (len(right_list) + len(wrong_list)+len(last_list))))
+        wsheet.write(row, 10, str(len(last_list) / len(ans)))
+        wsheet.write(row, 11, str(len(right_list) / (len(right_list) + len(wrong_list) + len(last_list))))
 
         wsheet.write(row, 12, str(ans))
         wsheet.write(row, 13, str(right_list))
@@ -202,7 +206,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         wsheet.write(row, 15, str(last_list))
         wb.save(path)
         global roww
-        roww=row
+        roww = row
 
     def set_url(self, img_, f_url):
         global img, path
@@ -213,8 +217,9 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         return path
 
     def do_pretreatment(self):
-        xf=xlrd.open_workbook(path)
-        st=xf.sheet_by_index(0)
-        pre_url=st.cell_value(1,5)+'\\'+st.cell_value(1,0)+'_'+(str(roww+1))+'_pre.tif'
+        xf = xlrd.open_workbook(path)
+        st = xf.sheet_by_index(0)
+        pre_url = st.cell_value(1, 5) + '\\' + st.cell_value(1, 0) + '_' + (str(roww + 1)) + '_pre.tif'
         images = cv2.imread(img)
+
         cv2.imwrite(pre_url, images)
