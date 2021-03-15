@@ -125,7 +125,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     @pyqtSlot(int)
     def on_algorithm_select_activated(self, index):
         tp = self.algorithm_select.itemText(index)
-        if tp=='无':
+        if tp == '无':
             return
         if len(name_cs[tp]) == 1:
             self.para_type1.setText(name_cs[tp][0])
@@ -148,9 +148,9 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         b = self.para2.text()
         print(a, b)
         if self.algorithm_select.currentText() == '标记分水岭':
-            ans = CV.cv.get_fenshuiling(img_after_pretreat, float(a))#1.0
+            ans = CV.cv.get_fenshuiling(img_after_pretreat, float(a))  # 1.0
         elif self.algorithm_select.currentText() == '梯度分水岭':
-            ans = CV.cv.get_fenshuiling_g(img_after_pretreat, float(a), int(b))# 1.0, 5
+            ans = CV.cv.get_fenshuiling_g(img_after_pretreat, float(a), int(b))  # 1.0, 5
         elif self.algorithm_select.currentText() == 'CV模型':
             ans = CV.cv.get_cv(img_after_pretreat, int(a), float(b))
         # ans = CV.cv.get_cv('D:/shaoxing0.6m_gauss.tif', 5, 0.1)
@@ -205,7 +205,12 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         wsheet.write(row, 0, str(row))
         wsheet.write(row, 1, str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))
         wsheet.write(row, 2, b_code)
-        wsheet.write(row, 3, self.algorithm_select.currentText() + '_' + self.para1.text() + '_' + self.para2.text())
+        if len(self.para2.text()) > 0:
+            wsheet.write(row, 3,
+                         self.algorithm_select.currentText() + '_' + self.para1.text() + '_' + self.para2.text())
+        else:
+            wsheet.write(row, 3,
+                         self.algorithm_select.currentText() + '_' + self.para1.text())
         wsheet.write(row, 4, str(len(right_list) + len(wrong_list)))
         wsheet.write(row, 5, str(len(right_list)))
         wsheet.write(row, 6, str(len(wrong_list)))
