@@ -15,7 +15,7 @@ Iobr = imreconstruct(Ie, I);%再重建
 Iobrd = imdilate(Iobr, se);%在基于重建的开操作的结果基础上，进行腐蚀
 Iobrcbr = imreconstruct(imcomplement(Iobrd), imcomplement(Iobr));%重建，标记图像为腐蚀后图像取补，模板为腐蚀前原图取补。
 Iobrcbr = imcomplement(Iobrcbr);%重建结果再取补，得到实际基于重建的闭操作的结果。
-figure
+%figure
 %imshow(Iobrcbr), title('基于重建的开+闭操作 (Iobrcbr)')
 
 
@@ -83,7 +83,8 @@ gradmag2 = imimposemin(gradmag, bgm | fgm4);
 
 %Finally we are ready to compute the watershed-based segmentation.
 L = watershed(gradmag2);
-%% 
+%%
+L=rgb2gray(L);%大菠萝悄悄加上去的
 [L,num] = bwlabel(L,4);%对边缘进行标记,L将不同连通域进行标记，num表示连通域的个数
 
 for i=1:num%将各个连通域的质心输出到数组中

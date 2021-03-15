@@ -125,10 +125,14 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     @pyqtSlot(int)
     def on_algorithm_select_activated(self, index):
         tp = self.algorithm_select.itemText(index)
+        if tp=='无':
+            return
         if len(name_cs[tp]) == 1:
             self.para_type1.setText(name_cs[tp][0])
             self.para_type1.show()
             self.para1.show()
+            self.para2.hide()
+            self.para_type2.hide()
         elif len(name_cs[tp]) == 2:
             self.para_type1.setText(name_cs[tp][0])
             self.para1.show()
