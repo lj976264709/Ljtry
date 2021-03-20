@@ -62,7 +62,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
             log.getImgURL(img)  # 其实应该是set url
             log.show()
             log.exec_()
-            ms=xlrd.open_workbook(filepath).sheet_by_index(0).cell_value(1,3)
+            ms = xlrd.open_workbook(filepath).sheet_by_index(0).cell_value(1, 3)
             self.isMushi.setText('目视数量' + str(int(ms)))
 
     def jump_to_add(self):
@@ -79,14 +79,20 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
 
     def jump_to_open(self):
         global filepath, img
-        path, _ = QFileDialog.getOpenFileName(None, '选择文件', "D:/Tree/exp", "xls Files(*.xls)")  # 打开资源管理器，path绝对路径
+        # path, _ = QFileDialog.getOpenFileName(None, '选择文件', "D:/Tree", "xls Files(*.xls)")  # 打开资源管理器，path绝对路径
+        path = QFileDialog.getExistingDirectory(None, "选择实验", "D:/Tree")
+        print(path)
+        if len(path) == 0:
+            return
+        dirctorys = path.split('/')
+        path = path + '/' + dirctorys[-1] + '.xls'
+        print(path)
         filepath = path
         if path == '':
             return
         # print(filepath)
         workbook = xlrd.open_workbook(path)
         sheet1 = workbook.sheet_by_index(0)
-        sheet2 = workbook.sheet_by_index(1)
         img = sheet1.row(1)[1].value
         print(img)
         self.lineEdit.setText(sheet1.row(1)[0].value)
@@ -97,6 +103,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
             self.isMushi.setText("未进行目视")
         else:
             self.isMushi.setText('目视数量' + str(int(ms)))
+        print('ok')
         self.get_table()
 
     def get_table(self):

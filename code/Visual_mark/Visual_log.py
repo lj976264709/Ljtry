@@ -45,7 +45,7 @@ class Visual_logic(QDialog, Ui_Visual):
 
 
 
-    def getImgURL(self, url):
+    def getImgURL(self, url): #入口
         global img_url
         img_url = url
         # 初始化界面
@@ -90,6 +90,8 @@ class Visual_logic(QDialog, Ui_Visual):
         wb = copy(rb)
         wsheet = wb.get_sheet(0)
         wsheet.write(1, 3, count_num)
+        ss = str(node_list)
+        wsheet.write(1, 4, ss)
         wb.save(filepath)
 
         copyfile('D:/23.jpg', result_url)
