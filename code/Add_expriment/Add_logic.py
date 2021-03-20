@@ -12,9 +12,6 @@ import matlab.engine
 import CV
 from Add_exp import Ui_add_exp_dialog
 
-pretreat = {0: '无', 10: '植被提取', 23: '均值滤波3*3', 25: '均值滤波5*5', 27: '均值滤波7*7',
-            33: '中值滤波3*3', 35: '中值滤波5*5', 37: '中值滤波7*7',
-            43: '高斯滤波3*3', 45: '高斯滤波5*5', 47: '高斯滤波7*7'}
 vis = []
 names = []
 algorithm = {0: '请选择', 1: 'CV算法'}
