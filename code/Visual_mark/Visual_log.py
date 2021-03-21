@@ -46,7 +46,8 @@ class Visual_logic(QDialog, Ui_Visual):
         # count_num = 0
 
     def getImgURL(self, url):  # 入口
-        global img_url
+        global img_url,k,rate
+        k=rate=1
         img_url = url
         # 初始化界面
         self.setupUi(self)

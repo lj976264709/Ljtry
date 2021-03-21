@@ -47,6 +47,8 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
     def menu_trigger(self, wa):
         if wa.text() == '目视定位':
             self.jump_to_mushi()
+        elif wa.text() == '目视区域':
+            print('iiiiiii')
 
     def jump_to_config(self):
         log = logic_config()
