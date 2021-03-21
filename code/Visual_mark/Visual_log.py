@@ -12,11 +12,12 @@ from PyQt5.QtGui import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QPoint
 from PIL import Image
-import xlrd                           #导入模块
-from xlutils.copy import copy        #导入copy模块
+import xlrd  # 导入模块
+from xlutils.copy import copy  # 导入copy模块
 import image_mark
 from Visual_mark import Ui_Visual
 import ast
+
 img_url = 'D:/23.tif'
 img_hight = 1000  # 图片窗口大小
 img_width = 400  # 图片窗口大小
@@ -27,6 +28,7 @@ rate = 1  # 放大缩小比例
 count_num = 0
 node_list = []
 filepath = ""
+
 
 class Visual_logic(QDialog, Ui_Visual):
     def __init__(self, parent=None):
@@ -43,9 +45,7 @@ class Visual_logic(QDialog, Ui_Visual):
         # node_list.clear()
         # count_num = 0
 
-
-
-    def getImgURL(self, url): #入口
+    def getImgURL(self, url):  # 入口
         global img_url
         img_url = url
         # 初始化界面
@@ -58,9 +58,9 @@ class Visual_logic(QDialog, Ui_Visual):
         self.img_widget.setGeometry(60, 100, img_hight, img_width)  # 图片大小
         self.Revoke.clicked.connect(self.revoke)  # 撤回上一个标记
         self.Revoke.setShortcut('Ctrl+Z')  # 绑定快捷键
-        self.save.clicked.connect(self.save_node) # 保存现在标记的点位
+        self.save.clicked.connect(self.save_node)  # 保存现在标记的点位
         self.finish.clicked.connect(self.finish_mark)
-        self.node_inti() # 初始化点位
+        self.node_inti()  # 初始化点位
         # 初始化界面
 
     def node_inti(self):
@@ -68,24 +68,23 @@ class Visual_logic(QDialog, Ui_Visual):
         global node_list, count_num  # 初始化
         node_list.clear()  # node_list还得读入一下文件
         count_num = 0
-        xf=xlrd.open_workbook(filepath)
-        st=xf.sheet_by_index(0)
+        xf = xlrd.open_workbook(filepath)
+        st = xf.sheet_by_index(0)
         print("sss")
-        tp=st.cell_value(1,4)
-        print("ss"+tp)
-        if len(tp)>0:
-            node_list=eval(tp)
+        tp = st.cell_value(1, 4)
+        print("ss" + tp)
+        if len(tp) > 0:
+            node_list = eval(tp)
         print("sss")
-        count_num=len(node_list)
+        count_num = len(node_list)
         self.count.setText(str(count_num))
         image_mark.Image_mark.mark_function(node_list, img_url)  # 文件写入
         self.img_widget.get_pre_img()
 
-
     def finish_mark(self):
 
         rb = xlrd.open_workbook(filepath)
-        st=rb.sheet_by_index(0)
+        st = rb.sheet_by_index(0)
         result_url = st.cell_value(1, 6) + '\\' + st.cell_value(1, 0) + '_mushi.jpg'
         wb = copy(rb)
         wsheet = wb.get_sheet(0)
@@ -97,17 +96,17 @@ class Visual_logic(QDialog, Ui_Visual):
         copyfile('D:/23.jpg', result_url)
         self.close()
 
-    def setFileURL(self,fileurl):
+    def setFileURL(self, fileurl):
         global filepath
         filepath = fileurl
 
     def save_node(self):
-        self.count.setText(str(count_num))# 更新计数。。
-        rb= xlrd.open_workbook(filepath)
-        wb=copy(rb)
-        wsheet=wb.get_sheet(0)
-        ss=str(node_list)
-        wsheet.write(1,4,ss)
+        self.count.setText(str(count_num))  # 更新计数。。
+        rb = xlrd.open_workbook(filepath)
+        wb = copy(rb)
+        wsheet = wb.get_sheet(0)
+        ss = str(node_list)
+        wsheet.write(1, 4, ss)
         wb.save(filepath)
 
     def revoke(self):
@@ -137,6 +136,7 @@ class Visual_logic(QDialog, Ui_Visual):
 class ImageWithMouseControl(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.left_click=False
         self.parent = parent
         self.img = QPixmap(img_url)
         self.scaled_img = self.img.scaled(self.size())
@@ -163,21 +163,28 @@ class ImageWithMouseControl(QWidget):
             self._startPos = e.pos()
             self.repaint()
 
+
     def mousePressEvent(self, e):
         if e.button() == Qt.LeftButton:
             self.left_click = True
             self._startPos = e.pos()
+        else:
+            print('an xia qu')
+
 
     def mouseReleaseEvent(self, e):
+        print(e.button())
         global count_num
         if e.button() == Qt.LeftButton:
             self.left_click = False
         elif e.button() == Qt.RightButton:  # 右键标记
+            print('song kai ')
             self.mark_node(e.x(), e.y())
             self.img = QPixmap('D:/23.jpg')
             self.scaled_img = self.img.scaled(img_hight * rate, img_width * rate)
             self.repaint()
             count_num = count_num + 1
+
 
     def get_pre_img(self):
         self.img = QPixmap('D:/23.jpg')
@@ -219,11 +226,15 @@ class ImageWithMouseControl(QWidget):
             self.point = QPoint(0, 0)
             self.update()
 
-
     def mark_node(self, x, y):  # 标点
         global node_list
         tx = (x - self.point.x()) / (rate * k)
         ty = (y - self.point.y()) / (rate * k)
         # print(tx,ty)
         node_list.append((tx, ty))
+        # try:
         image_mark.Image_mark.mark_function(node_list, img_url)  # 文件写入
+        # except BaseException:
+        #     print('fkkk')
+        # else:
+        #     print('ok')
