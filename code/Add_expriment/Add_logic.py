@@ -3,6 +3,7 @@ import time
 
 import cv2
 import xlrd  # 导入模块
+import xlwt
 from xlutils.copy import copy  # 导入copy模块
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QImage, QFont
@@ -225,6 +226,45 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         wb.save(path)
         global roww
         roww = row
+
+
+        path_ = path[:-4] + '-' + self.algorithm_select.currentText() + b_code+'.xls'
+        workbook = xlwt.Workbook(encoding='utf-8')
+        worksheet1 = workbook.add_sheet('目视')
+        tp = right_list.copy()
+        tp.extend(last_list)
+        worksheet1.write(0, 0, 'X')
+        worksheet1.write(0, 1, 'Y')
+        for i in range(len(tp)):
+            worksheet1.write(i + 1, 0, tp[i][0])
+            worksheet1.write(i + 1, 1, tp[i][1])
+        worksheet2 = workbook.add_sheet('机视')
+        tp = right_list.copy()
+        tp.extend(wrong_list)
+        worksheet2.write(0, 0, 'X')
+        worksheet2.write(0, 1, 'Y')
+        for i in range(len(tp)):
+            worksheet2.write(i + 1, 0, tp[i][0])
+            worksheet2.write(i + 1, 1, tp[i][1])
+        worksheet3 = workbook.add_sheet('正确')
+        worksheet3.write(0, 0, 'X')
+        worksheet3.write(0, 1, 'Y')
+        for i in range(len(right_list)):
+            worksheet3.write(i + 1, 0, right_list[i][0])
+            worksheet3.write(i + 1, 1, right_list[i][1])
+        worksheet4 = workbook.add_sheet('错判')
+        worksheet4.write(0, 0, 'X')
+        worksheet4.write(0, 1, 'Y')
+        for i in range(len(wrong_list)):
+            worksheet4.write(i + 1, 0, wrong_list[i][0])
+            worksheet4.write(i + 1, 1, wrong_list[i][1])
+        worksheet5 = workbook.add_sheet('漏判')
+        worksheet5.write(0, 0, 'X')
+        worksheet5.write(0, 1, 'Y')
+        for i in range(len(last_list)):
+            worksheet5.write(i + 1, 0, last_list[i][0])
+            worksheet5.write(i + 1, 1, last_list[i][1])
+        workbook.save(path_)
 
     def set_url(self, img_, f_url):
         global img, path
