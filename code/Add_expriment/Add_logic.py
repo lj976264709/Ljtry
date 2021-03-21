@@ -14,7 +14,7 @@ from Add_exp import Ui_add_exp_dialog
 
 vis = []
 names = []
-algorithm = {0: '请选择', 1: 'CV算法'}
+algorithm = {}
 num_cs = {}
 name_cs = {}
 path = ""
