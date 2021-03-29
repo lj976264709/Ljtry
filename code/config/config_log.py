@@ -1,15 +1,16 @@
 import xlrd  # 导入模块
 from xlutils.copy import copy  # 导入copy模块
 from PyQt5.QtCore import *
-from PyQt5.QtGui import QImage, QFont
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QDialog, QInputDialog
+from PyQt5.QtGui import QImage, QFont, QStandardItemModel, QStandardItem, QColor
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QDialog, QInputDialog, QTreeWidgetItem, QMessageBox
 
 from Config import Ui_Config_Dialog
 
-list_1 = []
+list_1 = {}
 list_2 = []
 list_3 = []
-
+list1tp = []
+id2string = {}
 
 class logic_config(QDialog, Ui_Config_Dialog):
     def __init__(self, parent=None):
@@ -30,10 +31,32 @@ class logic_config(QDialog, Ui_Config_Dialog):
         list_1.clear()
         list_2.clear()
         list_3.clear()
-        for i in range(1, len(st.row(0))):
-            if len(st.row(0)[i].value) > 0:
-                list_1.append(st.row(0)[i].value)
+        # for i in range(1, len(st.row(0))):
+        #     if len(st.row(0)[i].value) > 0:
+        #         list_1.append(st.row(0)[i].value)
+        global list1tp , id2string
+        list1tp.clear()
+        id2string.clear()
+        for i in range(1, st.nrows):
+            for j in range(len(st.row(i))):
+                if len(st.row(i)[j].value) > 0:
+                    list1tp.append(st.row(i)[j].value)
+        list1tp.sort()
 
+        list_1['root'] = []
+        for tp in list1tp:
+            id_string = tp.split('-')
+            id2string[id_string[0]] = id_string[1]
+            if len(id_string[0]) == 1:
+                list_1['root'].append(id_string[1])
+                list_1[id_string[1]] = []
+            else:
+                fa = id_string[0][:-2]
+                list_1[id2string[fa]].append(id_string[1])
+                list_1[id_string[1]] = []
+        # print(list_1)
+
+        #####
         st = xf.sheet_by_index(1)
         for i in range(1, st.nrows):
             if len(st.row(i)[2].value) > 0:
@@ -43,8 +66,8 @@ class logic_config(QDialog, Ui_Config_Dialog):
         for i in range(1, st.nrows):
             if len(st.row(i)[2].value) > 0:
                 list_3.append(st.row(i)[2].value)
-        slm1 = QStringListModel()
-        slm1.setStringList(list_1)
+        # slm1 = QStringListModel()
+        # slm1.setStringList(list_1)
         slm2 = QStringListModel()
         slm2.setStringList(list_2)
         slm3 = QStringListModel()
@@ -52,22 +75,73 @@ class logic_config(QDialog, Ui_Config_Dialog):
         font = QFont()
         font.setBold(True)  # 加粗
         font.setPointSize(16)
-        self.listView.setFont(font)
-        self.listView.setModel(slm1)
+        #
+        self.treeView.setHeaderHidden(True)
+        treeModel = QStandardItemModel()
+        rootNode = treeModel.invisibleRootItem()
+        self.get_menu(rootNode, 'root')
+        self.treeView.setModel(treeModel)
+        self.treeView.expandAll()
+        #
         self.listView_2.setFont(font)
         self.listView_2.setModel(slm2)
         self.listView_3.setFont(font)
         self.listView_3.setModel(slm3)
 
+    def get_menu(self, root, str):
+        fsize = 14
+        bold = False
+        if str == 'root':
+            bold = True
+            fsize = 16
+        for ss in list_1[str]:
+            mu = StandardItem(ss, fsize, bold)
+            self.get_menu(mu, ss)
+            root.appendRow(mu)
+        # print(list_1)
+
+    def delet_menu(self, root, str):
+        global list_1, list1tp
+        print(list_1)
+        for ss in list_1[root]:
+            if ss == str:
+                list_1[root].remove(str)
+            else:
+                self.delet_menu(ss, str)
+        for ss in list1tp:
+            if ss.endswith(str):
+                list1tp.remove(ss)
+                break
+
+    def write_menu(self):
+        rb = xlrd.open_workbook('D:/Tree/config.xls')
+        wb = copy(rb)
+        wsheet = wb.get_sheet(0)
+        pos = [0] * 10
+        for ss in list1tp:
+            wsheet.write(int(ss[0]), pos[int(ss[0])], ss)
+            pos[int(ss[0])] = pos[int(ss[0])] + 1
+        for i in range(10):
+            if pos[i] != 0:
+                wsheet.write(i, pos[i], '')
+        wb.save('D:/Tree/config.xls')
+
     def delete1(self):
-        index = self.listView.selectedIndexes()[0].row()
-        print(self.listView.selectedIndexes()[0].row())
-        global list_1
-        list_1.pop(index)
-        slm1 = QStringListModel()
-        slm1.setStringList(list_1)
-        self.listView.setModel(slm1)
-        self.file_delete(0, index + 1)
+        text = self.treeView.selectedIndexes()[0].data()
+        print(text)
+        self.delet_menu('root', text)
+        self.treeView.setHeaderHidden(True)
+        treeModel = QStandardItemModel()
+        rootNode = treeModel.invisibleRootItem()
+        self.get_menu(rootNode, 'root')
+        self.treeView.setModel(treeModel)
+        self.treeView.expandAll()
+        self.write_menu()
+
+        # slm1 = QStringListModel()
+        # slm1.setStringList(list_1)
+        # self.listView.setModel(slm1)
+        # self.file_delete(0, index + 1)
 
     def delete2(self):
         index = self.listView_2.selectedIndexes()[0].row()
@@ -90,17 +164,38 @@ class logic_config(QDialog, Ui_Config_Dialog):
         self.file_delete(2, index + 1)
 
     def add1(self):
-        text, ok = QInputDialog.getText(self, "算法输入", "请输入算法名称")
+        text, ok = QInputDialog.getText(self, "菜单添加", "请输入：父目录节点-添加菜单名称")
         if ok:
             print(text)
         else:
             return
-        global list_1
-        list_1.append(text)
-        slm1 = QStringListModel()
-        slm1.setStringList(list_1)
-        self.listView.setModel(slm1)
-        self.file_write(0, len(list_1), text)
+        global list_1, list1tp
+        ss = text.split('-')
+        try:
+            list_1[ss[0]].append(ss[1])
+            list_1[ss[1]] = []
+        except:
+            reply = QMessageBox.warning(self, '警告', '父节点不存在',
+                                        QMessageBox.Yes)
+        print(id2string)
+        for key, value in id2string.items():
+            if value==ss[0]:
+                fakey=key
+                break
+        mxid=1
+        for key in id2string.keys():
+            if key!=fakey and key.startswith(fakey):
+                mxid=max(mxid,int(key[len(fakey)+1]))
+        print(fakey+'.'+str(mxid+1)+'-'+ss[1])
+        list1tp.append(fakey+'.'+str(mxid+1)+'-'+ss[1])
+        self.treeView.setHeaderHidden(True)
+        treeModel = QStandardItemModel()
+        rootNode = treeModel.invisibleRootItem()
+        self.get_menu(rootNode, 'root')
+        self.treeView.setModel(treeModel)
+        self.treeView.expandAll()
+        self.write_menu()
+
 
     def add2(self):
         text, ok = QInputDialog.getText(self, "算法输入", "请输入算法名称")
@@ -176,3 +271,14 @@ class logic_config(QDialog, Ui_Config_Dialog):
         for j in range(len(tp.row(tp.nrows - 1))):
             wsheet.write(tp.nrows - 1, j, '')
         wb.save('D:/Tree/config.xls')
+
+
+class StandardItem(QStandardItem):
+    def __init__(self, txt='', font_size=12, set_bold=False, color=QColor(0, 0, 0)):
+        super().__init__()
+        fnt = QFont('Open Sans', font_size)
+        fnt.setBold(set_bold)
+        self.setEditable(False)
+        self.setForeground(color)
+        self.setFont(fnt)
+        self.setText(txt)
