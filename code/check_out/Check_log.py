@@ -47,3 +47,4 @@ class Check_logic(QDialog, Ui_Dialog_Check):
             self.img__.setPixmap(tp.scaled(self.img__.width(), tp.height() * self.img__.width() / tp.width()))
         else:
             self.img__.setPixmap(tp.scaled(tp.width() * self.img__.height() / tp.height(), self.img__.height()))
+            self.img__.move((1021 - (tp.width() * self.img__.height() / tp.height())) / 2 + 40, 120)
