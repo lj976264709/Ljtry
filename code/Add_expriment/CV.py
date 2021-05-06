@@ -60,7 +60,7 @@ class cv:  # 加算法
                 for j in range(i + 1, len(rt)):
                     if vis[j] == 1:
                         continue
-                    if (rt[i][0] - rt[j][0]) ** 2 + (rt[i][1] - rt[j][1]) ** 2 < 49.0:
+                    if (rt[i][0] - rt[j][0]) ** 2 + (rt[i][1] - rt[j][1]) ** 2 < 25.0:
                         vis[j] = 1
             if len(ans) == 0:
                 for i in range(len(rt)):

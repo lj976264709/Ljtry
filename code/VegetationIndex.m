@@ -11,16 +11,16 @@ B = image_double(:,:,3);
 %y=G+R;
 %归一化绿-红差值指数（NGRDI）
 NGRDI = (G - R) ./ (G + R);
-imshow(NGRDI);
+%imshow(NGRDI);
 % imwrite(NGRDI,'D:\yjs\img\lanqiuchang_NGRDI.png');
 %进行otsu阈值分割，对图像进行二值化处理，并合成彩色图像，实现根据前后景的区分，即完成植被与其他地类的区分。
 
 NGRDI_level = graythresh(G);
 NGRDI_bw = im2bw(NGRDI,NGRDI_level);
-imshow(NGRDI_bw);
+%imshow(NGRDI_bw);
 %imwrite(NGRDI_bw,'D:\shaoxing_test2_rgb_bw.tif')
 NGRDI_bw1 = imcomplement(NGRDI_bw);
-imshow(NGRDI_bw1);
+%imshow(NGRDI_bw1);
 NGRDI_bw_R = R .* NGRDI_bw;
 NGRDI_bw_G = G .* NGRDI_bw;
 NGRDI_bw_B = B .* NGRDI_bw;
@@ -90,8 +90,8 @@ GLI_rgb = uint8(GLI_bw);
 %imshow(GLI_rgb)
 %imwrite(GLI_rgb,'D:\GLI_rgb.tif');
 
-subplot(221);imshow(image);title('image');
-subplot(222);imshow(NGRDI);title('NGRDI');
-subplot(223);imshow(exg);title('ExG');
-subplot(224);imshow(exgr);title('GLI_rgb');
+%subplot(221);imshow(image);title('image');
+%subplot(222);imshow(NGRDI);title('NGRDI');
+%subplot(223);imshow(exg);title('ExG');
+%subplot(224);imshow(exgr);title('GLI_rgb');
 
