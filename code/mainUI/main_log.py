@@ -16,6 +16,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+from march_log import march_log
+
 filepath = ""
 img = ""
 row_list = []
@@ -31,7 +33,13 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         self.mushiBT.clicked.connect(self.jump_to_mushi)  #
         self.RN.clicked.connect(self.get_table)
         self.Config.triggered.connect(self.jump_to_config)
+        self.marchSeting.triggered.connect(self.jump_to_march)
         self.get_menu()  # 获得实验按钮
+
+    def jump_to_march(self):
+        log = march_log()
+        log.show()
+        log.exec_()
 
     def get_menu(self):
         xf = xlrd.open_workbook('D:/Tree/config.xls')

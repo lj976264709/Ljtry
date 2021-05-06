@@ -1,4 +1,5 @@
 import math
+import os
 import time
 
 import cv2
@@ -117,6 +118,10 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             self.algorithm_select.addItem(v, k)
         self.para1.hide()
         self.para2.hide()
+        self.label_5.hide()
+        self.algorithm_select_2.hide()
+        self.label_6.hide()
+        self.algorithm_select_3.hide()
         self.para_type1.hide()
         self.para_type2.hide()
 
@@ -139,6 +144,29 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             self.para2.show()
             self.para_type2.show()
 
+        if self.algorithm_select.currentText() == '模板匹配':
+            self.label_5.show()
+            self.label_6.show()
+            self.algorithm_select_2.clear()
+            for tp in os.walk('D:\Tree\Template'):
+                for i in range(len(tp[1])):
+                    self.algorithm_select_2.addItem(tp[1][i], i)
+                break
+            self.algorithm_select_2.show()
+
+            self.algorithm_select_3.clear()
+            methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR',
+                       'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
+            for i in range(len(methods)):
+                self.algorithm_select_3.addItem(methods[i], i)
+            self.algorithm_select_3.show()
+
+        else:
+            self.label_5.hide()
+            self.label_6.hide()
+            self.algorithm_select_3.hide()
+            self.algorithm_select_2.hide()
+
     def accept(self):  # 1’
         tp = self.do_pretreatment()
         print(img)
@@ -151,7 +179,11 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             ans = CV.cv.get_fenshuiling_g(img_after_pretreat, float(a), int(b))  # 1.0, 5
         elif self.algorithm_select.currentText() == 'CV模型':
             ans = CV.cv.get_cv(img_after_pretreat, int(a), float(b))
-        # ans = CV.cv.get_cv('D:/shaoxing0.6m_gauss.tif', 5, 0.1)
+        elif self.algorithm_select.currentText() == '模板匹配':
+            ans = CV.cv.get_march(img_after_pretreat, float(a),
+                                  'D:\Tree\Template\\' + self.algorithm_select_2.currentText(),
+                                  self.algorithm_select_3.currentText())
+
         # print(ans)
         print('yes')
         self.ans_compare(ans)  # 目视和计算结果的对比
@@ -227,8 +259,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         global roww
         roww = row
 
-
-        path_ = path[:-4] + '-' + self.algorithm_select.currentText() + b_code+'.xls'
+        path_ = path[:-4] + '-' + self.algorithm_select.currentText() + b_code + '.xls'
         workbook = xlwt.Workbook(encoding='utf-8')
         worksheet1 = workbook.add_sheet('目视')
         tp = right_list.copy()

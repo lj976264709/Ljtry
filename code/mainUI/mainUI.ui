@@ -189,6 +189,7 @@
      <string>系统配置</string>
     </property>
     <addaction name="Config"/>
+    <addaction name="marchSeting"/>
    </widget>
    <addaction name="menu_1"/>
    <addaction name="menu_2"/>
@@ -214,6 +215,11 @@
   <action name="Config">
    <property name="text">
     <string>实验配置</string>
+   </property>
+  </action>
+  <action name="marchSeting">
+   <property name="text">
+    <string>模板管理</string>
    </property>
   </action>
  </widget>
