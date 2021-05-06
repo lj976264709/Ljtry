@@ -43,7 +43,8 @@ class Check_logic(QDialog, Ui_Dialog_Check):
         print(img_url)
         copyfile('D:/66.jpg', result_url)
         tp = QPixmap('D:/66.jpg')
-        if tp.height() * 651 / tp.width() > 1021:
+        # if tp.height() * 651 / tp.width() < 1021:
+        if tp.height() * 1021 / tp.width() < 651:
             self.img__.setPixmap(tp.scaled(self.img__.width(), tp.height() * self.img__.width() / tp.width()))
         else:
             self.img__.setPixmap(tp.scaled(tp.width() * self.img__.height() / tp.height(), self.img__.height()))

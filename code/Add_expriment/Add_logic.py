@@ -113,11 +113,13 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
                 for j in range(int(st.cell_value(i, 3))):
                     csmc.append(st.cell_value(i, 4 + j))
                 name_cs[st.cell_value(i, 2)] = csmc
-        # print(name_cs)
+        print(name_cs)
         for k, v in algorithm.items():
             self.algorithm_select.addItem(v, k)
         self.para1.hide()
         self.para2.hide()
+        self.para3.hide()
+        self.para_type3.hide()
         self.label_5.hide()
         self.algorithm_select_2.hide()
         self.label_6.hide()
@@ -136,6 +138,8 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             self.para1.show()
             self.para2.hide()
             self.para_type2.hide()
+            self.para3.hide()
+            self.para_type3.hide()
         elif len(name_cs[tp]) == 2:
             self.para_type1.setText(name_cs[tp][0])
             self.para1.show()
@@ -143,6 +147,18 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             self.para_type2.setText(name_cs[tp][1])
             self.para2.show()
             self.para_type2.show()
+            self.para3.hide()
+            self.para_type3.hide()
+        elif len(name_cs[tp]) == 3:
+            self.para_type1.setText(name_cs[tp][0])
+            self.para1.show()
+            self.para_type1.show()
+            self.para_type2.setText(name_cs[tp][1])
+            self.para2.show()
+            self.para_type2.show()
+            self.para_type3.setText(name_cs[tp][2])
+            self.para3.show()
+            self.para_type3.show()
 
         if self.algorithm_select.currentText() == '模板匹配':
             self.label_5.show()
@@ -172,13 +188,14 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         print(img)
         a = self.para1.text()
         b = self.para2.text()
+        c = self.para3.text()
         print(a, b)
         if self.algorithm_select.currentText() == '标记分水岭':
             ans = CV.cv.get_fenshuiling(img_after_pretreat, float(a))  # 1.0
         elif self.algorithm_select.currentText() == '梯度分水岭':
             ans = CV.cv.get_fenshuiling_g(img_after_pretreat, float(a), int(b))  # 1.0, 5
         elif self.algorithm_select.currentText() == 'CV模型':
-            ans = CV.cv.get_cv(img_after_pretreat, int(a), float(b))
+            ans = CV.cv.get_cv(img_after_pretreat, float(a), int(b), float(c))
         elif self.algorithm_select.currentText() == '模板匹配':
             ans = CV.cv.get_march(img_after_pretreat, float(a),
                                   'D:\Tree\Template\\' + self.algorithm_select_2.currentText(),
@@ -235,7 +252,10 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         wsheet.write(row, 0, str(row))
         wsheet.write(row, 1, str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))
         wsheet.write(row, 2, b_code)
-        if len(self.para2.text()) > 0:
+        if self.algorithm_select.currentText() == '模板匹配':
+            wsheet.write(row, 3,
+                         self.algorithm_select.currentText() + '_' + self.algorithm_select_2.currentText() + '_' + self.algorithm_select_3.currentText() + '_' + self.para1.text())
+        elif len(self.para2.text()) > 0:
             wsheet.write(row, 3,
                          self.algorithm_select.currentText() + '_' + self.para1.text() + '_' + self.para2.text())
         else:
@@ -308,10 +328,12 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     def do_pretreatment(self):
         xf = xlrd.open_workbook(path)
         st = xf.sheet_by_index(0)
-        pre_url = st.cell_value(1, 5) + '\\' + st.cell_value(1, 0) + '_' + (str(roww + 1)) + '_pre.tif'
+        roww=xf.sheet_by_index(1).nrows
+        pre_url = st.cell_value(1, 5) + '\\' + st.cell_value(1, 0) + '_' + (str(roww)) + '_pre.tif'
         global img_after_pretreat
         img_after_pretreat = pre_url
         images = cv2.imread(img)
+        flag = False
         for i in range(len(yuchuli)):
             tp = yuchuli[i].split('_')
             if tp[0] == '高斯滤波':
@@ -320,4 +342,10 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
                 images = cv2.medianBlur(images, int(tp[1]))
             elif tp[0] == '均值滤波':
                 images = cv2.blur(images, (int(tp[1]), int(tp[1])))
+            elif tp[0] == 'GLI植被提取':
+                flag = True
         cv2.imwrite(pre_url, images)
+        if self.algorithm_select.currentText() == 'CV模型':
+            flag = True
+        if flag:
+            CV.cv.get_CLI(pre_url, pre_url)

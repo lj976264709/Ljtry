@@ -6,12 +6,18 @@ import numpy as np
 
 
 class cv:  # 加算法
-    def get_cv(url, a, b):
+    def get_cv(url, a, b, c):
         eng = matlab.engine.start_matlab()  # 打开matlab引擎
-        result = eng.cv(url, 1, a, b)  # 返回matlab的cv函数返回的数组（坐标），cv函数（原图像地址，定位图像地址，筛选距离，迭代次数，膨胀收缩系数）
+        result = eng.cv(url, a, b, c)  # 返回matlab的cv函数返回的数组（坐标），cv函数（原图像地址，定位图像地址，筛选距离，迭代次数，膨胀收缩系数）
         # print(result)
         eng.quit()  # 关闭matlab引擎
         return result
+
+    def get_CLI(url, ot_url):
+        print(url)
+        eng = matlab.engine.start_matlab()  # 打开matlab引擎
+        eng.VegetationIndex(url, ot_url)
+        eng.quit()  # 关闭matlab引擎
 
     def get_fenshuiling(url, a):
         a = float(a)
@@ -56,23 +62,22 @@ class cv:  # 加算法
                         continue
                     if (rt[i][0] - rt[j][0]) ** 2 + (rt[i][1] - rt[j][1]) ** 2 < 49.0:
                         vis[j] = 1
-            if len(ans)==0:
+            if len(ans) == 0:
                 for i in range(len(rt)):
-                    if vis[i]==0:
+                    if vis[i] == 0:
                         ans.append(rt[i])
             else:
-                sz=len(ans)
+                sz = len(ans)
                 for j in range(len(rt)):
-                    if vis[j]==1:
+                    if vis[j] == 1:
                         continue
-                    flag=True
+                    flag = True
                     for i in range(sz):
                         if (ans[i][0] - rt[j][0]) ** 2 + (ans[i][1] - rt[j][1]) ** 2 < 49.0:
-                            flag=False
+                            flag = False
                             break
                     if flag:
                         ans.append(rt[j])
-
 
         print("len==")
         print(len(ans))

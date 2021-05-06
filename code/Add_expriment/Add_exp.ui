@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>713</width>
-    <height>607</height>
+    <width>716</width>
+    <height>657</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -146,8 +146,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>520</x>
-     <y>550</y>
+     <x>530</x>
+     <y>600</y>
      <width>156</width>
      <height>23</height>
     </rect>
@@ -268,6 +268,29 @@
    </property>
    <property name="text">
     <string>方法选择：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="para_type3">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>540</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>参数3 ：</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="para3">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>540</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
    </property>
   </widget>
  </widget>

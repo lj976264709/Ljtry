@@ -1,4 +1,5 @@
 function centriod_num=cv(picturefile,d,a,b)%图片路径，图片处理结果位置，筛选距离，迭代次数，膨胀收缩系数
+
 %% 读取影像
 Img=imread(picturefile);
 Img=uint8(Img);

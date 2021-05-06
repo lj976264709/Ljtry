@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_add_exp_dialog(object):
     def setupUi(self, add_exp_dialog):
         add_exp_dialog.setObjectName("add_exp_dialog")
-        add_exp_dialog.resize(713, 607)
+        add_exp_dialog.resize(716, 657)
         self.label_3 = QtWidgets.QLabel(add_exp_dialog)
         self.label_3.setGeometry(QtCore.QRect(40, 35, 541, 21))
         font = QtGui.QFont()
@@ -55,7 +55,7 @@ class Ui_add_exp_dialog(object):
         self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_2.setObjectName("line_2")
         self.buttonBox = QtWidgets.QDialogButtonBox(add_exp_dialog)
-        self.buttonBox.setGeometry(QtCore.QRect(520, 550, 156, 23))
+        self.buttonBox.setGeometry(QtCore.QRect(530, 600, 156, 23))
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.gridLayoutWidget = QtWidgets.QWidget(add_exp_dialog)
@@ -99,6 +99,12 @@ class Ui_add_exp_dialog(object):
         font.setPointSize(12)
         self.label_6.setFont(font)
         self.label_6.setObjectName("label_6")
+        self.para_type3 = QtWidgets.QLabel(add_exp_dialog)
+        self.para_type3.setGeometry(QtCore.QRect(370, 540, 101, 16))
+        self.para_type3.setObjectName("para_type3")
+        self.para3 = QtWidgets.QLineEdit(add_exp_dialog)
+        self.para3.setGeometry(QtCore.QRect(470, 540, 113, 20))
+        self.para3.setObjectName("para3")
 
         self.retranslateUi(add_exp_dialog)
         self.buttonBox.accepted.connect(add_exp_dialog.accept)
@@ -122,3 +128,4 @@ class Ui_add_exp_dialog(object):
         self.algorithm_select_3.setItemText(0, _translate("add_exp_dialog", "请选择"))
         self.algorithm_select_3.setItemText(1, _translate("add_exp_dialog", "CV算法"))
         self.label_6.setText(_translate("add_exp_dialog", "方法选择："))
+        self.para_type3.setText(_translate("add_exp_dialog", "参数3 ："))
