@@ -255,6 +255,9 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         if self.algorithm_select.currentText() == '模板匹配':
             wsheet.write(row, 3,
                          self.algorithm_select.currentText() + '_' + self.algorithm_select_2.currentText() + '_' + self.algorithm_select_3.currentText() + '_' + self.para1.text())
+        elif len(self.para3.text()) > 0:
+            wsheet.write(row, 3,
+                         self.algorithm_select.currentText() + '_' + self.para1.text() + '_' + self.para2.text()+'_' + self.para3.text())
         elif len(self.para2.text()) > 0:
             wsheet.write(row, 3,
                          self.algorithm_select.currentText() + '_' + self.para1.text() + '_' + self.para2.text())

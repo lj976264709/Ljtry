@@ -1,4 +1,4 @@
-function centriod_num=vegetationindex(picturefile£¬url)
+function centriod_num=vegetationindex(picturefile,url)
 image = imread(picturefile);
 centriod_num=[];
 
