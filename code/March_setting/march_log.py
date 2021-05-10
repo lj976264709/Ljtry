@@ -7,6 +7,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import os
+
+from imageCut import Form
 from march import Ui_MarchSetting
 
 list_1 = []
@@ -34,8 +36,9 @@ class march_log(QDialog, Ui_MarchSetting):
         self.addBT2.clicked.connect(self.addMarch)
 
     def addMarch(self):
-        path= QFileDialog.getOpenFileName(None, '选择文件', "D:/Tree", "Image Files(*.jpg *.png)")  # 打开资源管理器，path绝对路径
-        print(path)
+        log=Form()
+        log.show()
+        log.exec_()
 
     def deleteSet(self):
         index = self.listView_set.selectedIndexes()[0].row()

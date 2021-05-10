@@ -35,7 +35,7 @@ class cv:  # 加算法
         eng.quit()
         return result
 
-    def get_march(url, min_res, march_path, meth):
+    def get_march(url, min_res, dis, march_path, meth):
         ans = []
         rt = []
         print(url, min_res, march_path, meth)
@@ -60,7 +60,7 @@ class cv:  # 加算法
                 for j in range(i + 1, len(rt)):
                     if vis[j] == 1:
                         continue
-                    if (rt[i][0] - rt[j][0]) ** 2 + (rt[i][1] - rt[j][1]) ** 2 < 25.0:
+                    if (rt[i][0] - rt[j][0]) ** 2 + (rt[i][1] - rt[j][1]) ** 2 < dis:
                         vis[j] = 1
             if len(ans) == 0:
                 for i in range(len(rt)):
@@ -73,13 +73,18 @@ class cv:  # 加算法
                         continue
                     flag = True
                     for i in range(sz):
-                        if (ans[i][0] - rt[j][0]) ** 2 + (ans[i][1] - rt[j][1]) ** 2 < 49.0:
+                        if (ans[i][0] - rt[j][0]) ** 2 + (ans[i][1] - rt[j][1]) ** 2 < dis:
                             flag = False
                             break
                     if flag:
                         ans.append(rt[j])
-
-        print("len==")
-        print(len(ans))
-
-        return ans
+        # print("len==")
+        # print(len(ans))
+        ans__ = []
+        img_ = cv2.imread(url)
+        for i in range(len(ans)):
+            ans__.append([ans[i][0] + int(w / 2), ans[i][1] + int(h / 2)])
+            cv2.rectangle(img_, (int(ans[i][0]), int(ans[i][1])),
+                          (int(ans[i][0] + w), int(ans[i][1]) + h), (0, 0, 137), 1)
+        cv2.imwrite(r'D:\ans.png', img_)
+        return ans__

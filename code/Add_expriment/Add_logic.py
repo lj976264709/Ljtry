@@ -197,7 +197,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         elif self.algorithm_select.currentText() == 'CV模型':
             ans = CV.cv.get_cv(img_after_pretreat, float(a), int(b), float(c))
         elif self.algorithm_select.currentText() == '模板匹配':
-            ans = CV.cv.get_march(img_after_pretreat, float(a),
+            ans = CV.cv.get_march(img_after_pretreat, float(a), float(b),
                                   'D:\Tree\Template\\' + self.algorithm_select_2.currentText(),
                                   self.algorithm_select_3.currentText())
 
@@ -213,6 +213,9 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         return math.sqrt((pa[0] - pb[0]) * (pa[0] - pb[0]) + (pa[1] - pb[1]) * (pa[1] - pb[1]))
 
     def ans_compare(self, ans):
+        default_distance = 49
+        if self.algorithm_select.currentText() == '模板匹配':
+            default_distance = float(self.para2.text())*0.9
         xf = xlrd.open_workbook(path)
         ms = xf.sheet_by_index(0).cell_value(1, 4)
         if len(ms) == 0:
@@ -229,7 +232,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             for j in range(len(ans_list)):
                 if vis_ans[j] == 1:
                     continue
-                if self.distance(ms_list[i], ans_list[j]) < 7.0:  # 这个距离到底多少合适???还需要商量
+                if self.distance(ms_list[i], ans_list[j]) < math.sqrt(default_distance):  # 这个距离到底多少合适???还需要商量
                     vis_ms[i] = 1
                     vis_ans[j] = 1
                     break
@@ -252,18 +255,16 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         wsheet.write(row, 0, str(row))
         wsheet.write(row, 1, str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))
         wsheet.write(row, 2, b_code)
+        str_id = ''
         if self.algorithm_select.currentText() == '模板匹配':
-            wsheet.write(row, 3,
-                         self.algorithm_select.currentText() + '_' + self.algorithm_select_2.currentText() + '_' + self.algorithm_select_3.currentText() + '_' + self.para1.text())
+            str_id = self.algorithm_select.currentText() + '_' + self.algorithm_select_2.currentText() + '_' + self.algorithm_select_3.currentText() + '_' + self.para1.text() + '_' + self.para2.text()
         elif len(self.para3.text()) > 0:
-            wsheet.write(row, 3,
-                         self.algorithm_select.currentText() + '_' + self.para1.text() + '_' + self.para2.text()+'_' + self.para3.text())
+            str_id = self.algorithm_select.currentText() + '_' + self.para1.text() + '_' + self.para2.text() + '_' + self.para3.text()
         elif len(self.para2.text()) > 0:
-            wsheet.write(row, 3,
-                         self.algorithm_select.currentText() + '_' + self.para1.text() + '_' + self.para2.text())
+            str_id = self.algorithm_select.currentText() + '_' + self.para1.text() + '_' + self.para2.text()
         else:
-            wsheet.write(row, 3,
-                         self.algorithm_select.currentText() + '_' + self.para1.text())
+            str_id = self.algorithm_select.currentText() + '_' + self.para1.text()
+        wsheet.write(row, 3, str(str_id))
         wsheet.write(row, 4, str(len(right_list) + len(wrong_list)))
         wsheet.write(row, 5, str(len(right_list)))
         wsheet.write(row, 6, str(len(wrong_list)))
@@ -282,7 +283,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         global roww
         roww = row
 
-        path_ = path[:-4] + '-' + self.algorithm_select.currentText() + b_code + '.xls'
+        path_ = path[:-4] + '-' + str(str_id)+'@'+ b_code + '.xls'
         workbook = xlwt.Workbook(encoding='utf-8')
         worksheet1 = workbook.add_sheet('目视')
         tp = right_list.copy()
@@ -331,8 +332,8 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     def do_pretreatment(self):
         xf = xlrd.open_workbook(path)
         st = xf.sheet_by_index(0)
-        roww=xf.sheet_by_index(1).nrows
-        pre_url = st.cell_value(1, 5) + '\\' + st.cell_value(1, 0) + '_' + (str(roww)) + '_pre.tif'
+        roww = xf.sheet_by_index(1).nrows
+        pre_url = st.cell_value(1, 6) + '\\' + st.cell_value(1, 0) + '_' + (str(roww)) + '_pre.tif'
         global img_after_pretreat
         img_after_pretreat = pre_url
         images = cv2.imread(img)

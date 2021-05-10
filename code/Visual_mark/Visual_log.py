@@ -28,6 +28,7 @@ rate = 1  # 放大缩小比例
 count_num = 0
 node_list = []
 filepath = ""
+sizz = 2
 
 
 class Visual_logic(QDialog, Ui_Visual):
@@ -46,8 +47,8 @@ class Visual_logic(QDialog, Ui_Visual):
         # count_num = 0
 
     def getImgURL(self, url):  # 入口
-        global img_url,k,rate
-        k=rate=1
+        global img_url, k, rate
+        k = rate = 1
         img_url = url
         # 初始化界面
         self.setupUi(self)
@@ -61,25 +62,35 @@ class Visual_logic(QDialog, Ui_Visual):
         self.Revoke.setShortcut('Ctrl+Z')  # 绑定快捷键
         self.save.clicked.connect(self.save_node)  # 保存现在标记的点位
         self.finish.clicked.connect(self.finish_mark)
+        self.spinBox.valueChanged.connect(self.changeSize)
+        self.spinBox.setMinimum(2)
+        self.spinBox.setMaximum(12)
         self.node_inti()  # 初始化点位
         # 初始化界面
 
     def node_inti(self):
 
-        global node_list, count_num  # 初始化
+        global node_list, count_num, sizz  # 初始化
         node_list.clear()  # node_list还得读入一下文件
         count_num = 0
         xf = xlrd.open_workbook(filepath)
         st = xf.sheet_by_index(0)
         print("sss")
         tp = st.cell_value(1, 4)
+        sizz = st.cell_value(1, 5)
         print("ss" + tp)
         if len(tp) > 0:
             node_list = eval(tp)
         print("sss")
         count_num = len(node_list)
         self.count.setText(str(count_num))
-        image_mark.Image_mark.mark_function(node_list, img_url)  # 文件写入
+        image_mark.Image_mark.mark_function(node_list, img_url,sizz)  # 文件写入
+        self.img_widget.get_pre_img()
+
+    def changeSize(self):
+        global sizz
+        sizz = self.spinBox.value()
+        image_mark.Image_mark.mark_function(node_list, img_url, sizz)  # 文件写入
         self.img_widget.get_pre_img()
 
     def finish_mark(self):
@@ -92,6 +103,7 @@ class Visual_logic(QDialog, Ui_Visual):
         wsheet.write(1, 3, count_num)
         ss = str(node_list)
         wsheet.write(1, 4, ss)
+        wsheet.write(1, 5, sizz)
         wb.save(filepath)
 
         copyfile('D:/23.jpg', result_url)
@@ -108,6 +120,7 @@ class Visual_logic(QDialog, Ui_Visual):
         wsheet = wb.get_sheet(0)
         ss = str(node_list)
         wsheet.write(1, 4, ss)
+        wsheet.write(1, 5, sizz)
         wb.save(filepath)
 
     def revoke(self):
@@ -137,7 +150,7 @@ class Visual_logic(QDialog, Ui_Visual):
 class ImageWithMouseControl(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.left_click=False
+        self.left_click = False
         self.parent = parent
         self.img = QPixmap(img_url)
         self.scaled_img = self.img.scaled(self.size())
@@ -164,14 +177,12 @@ class ImageWithMouseControl(QWidget):
             self._startPos = e.pos()
             self.repaint()
 
-
     def mousePressEvent(self, e):
         if e.button() == Qt.LeftButton:
             self.left_click = True
             self._startPos = e.pos()
         else:
             print('an xia qu')
-
 
     def mouseReleaseEvent(self, e):
         print(e.button())
@@ -186,7 +197,6 @@ class ImageWithMouseControl(QWidget):
             self.repaint()
             count_num = count_num + 1
 
-
     def get_pre_img(self):
         self.img = QPixmap('D:/23.jpg')
         self.scaled_img = self.img.scaled(img_hight * rate, img_width * rate)
@@ -196,7 +206,7 @@ class ImageWithMouseControl(QWidget):
         global node_list, count_num
         if len(node_list) != 0:
             node_list.pop()
-        image_mark.Image_mark.mark_function(node_list, img_url)
+        image_mark.Image_mark.mark_function(node_list, img_url,sizz)
         self.img = QPixmap('D:/23.jpg')
         self.scaled_img = self.img.scaled(img_hight * rate, img_width * rate)
         self.repaint()
@@ -234,7 +244,7 @@ class ImageWithMouseControl(QWidget):
         # print(tx,ty)
         node_list.append((tx, ty))
         # try:
-        image_mark.Image_mark.mark_function(node_list, img_url)  # 文件写入
+        image_mark.Image_mark.mark_function(node_list, img_url,sizz)  # 文件写入
         # except BaseException:
         #     print('fkkk')
         # else:

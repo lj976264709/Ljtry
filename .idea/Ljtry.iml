@@ -9,8 +9,9 @@
       <sourceFolder url="file://$MODULE_DIR$/code/check_out" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/code/config" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/code/March_setting" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/ImageCut" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.7" jdkType="Python SDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

@@ -27,19 +27,20 @@ class Check_logic(QDialog, Ui_Dialog_Check):
         result_url = st.cell_value(1, 6) + '\\' + st.cell_value(1, 0) + '_' + str(hang) + '_Compared.jpg'
         result_url_js = st.cell_value(1, 6) + '\\' + st.cell_value(1, 0) + '_' + str(hang) + '_js.jpg'
 
+        sz = st.cell_value(1, 5)
         self.description.setText(st.cell_value(1, 0) + '目视机视对比')
         hang = int(hang)
         self.description_3.setText('准确率:' + str(round(float(sf.cell_value(hang, 8)) * 100, 3)) +
                                    '%   漏判率:' + str(round(float(sf.cell_value(hang, 9)) * 100, 3)) +
                                    '%   误判率:' + str(round(float(sf.cell_value(hang, 10)) * 100, 3)) +
-                                   '%   匹配率:' + str(round(float(sf.cell_value(hang, 11)) * 100, 3))+'%')
+                                   '%   匹配率:' + str(round(float(sf.cell_value(hang, 11)) * 100, 3)) + '%')
         self.description_2.setText(" ○ 为正确标记，╳ 为错判标记，■ 为漏判标记")
         global right_list, wrong_list, last_list, img_url
         right_list = eval(a)
         wrong_list = eval(b)
         last_list = eval(c)
         img_url = url
-        image_mark.Image_mark.mark_function_2(right_list, wrong_list, last_list, img_url, result_url_js)
+        image_mark.Image_mark.mark_function_2(right_list, wrong_list, last_list, img_url, result_url_js,sz)
         print(img_url)
         copyfile('D:/66.jpg', result_url)
         tp = QPixmap('D:/66.jpg')

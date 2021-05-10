@@ -117,7 +117,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         self.get_table()
 
     def get_table(self):
-        self.model = QStandardItemModel(20, 12)
+        self.model = QStandardItemModel(200, 12)
         titles = ['创建时间', '预处理', '单木定位算法', '识别树木数量', '正确识别数量', '错判单木数目', '漏判单木数目', '准确率', '漏判率', '误判率', '匹配率',
                   ' ']
         self.model.setHorizontalHeaderLabels(titles)
@@ -143,7 +143,8 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
 
         self.tableView.setModel(self.model)
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.tableView.setColumnWidth(1, 200)
+        self.tableView.setColumnWidth(1, 100)
+        self.tableView.setColumnWidth(2, 350)
         for i in range(0, r_rows):
             self.tableView.setIndexWidget(self.model.index(i, 11), self.buttonForRow())
 

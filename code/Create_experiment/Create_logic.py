@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog, QDialog
 from Create_exp import Ui_Create_Dialog
 from Visual_log import Visual_logic
 
-header1 = ['实验名称', '图像地址', '描述', '目视定位', '目视点对', '预处理文件所在位置', '预处理文件所在位置']
+header1 = ['实验名称', '图像地址', '描述', '目视定位', '目视点对', '标记尺寸','预处理文件所在位置']
 header2 = ['编号', '创建时间', '预处理编码',
            '算法', '识别树木数量', '正确识别数量', '错判单木数目', '漏判单木数目', '准确率', '漏判率', '误判率', '匹配率', '点对']
 path = ""
@@ -86,7 +86,7 @@ class Logic_create(QDialog, Ui_Create_Dialog):
         worksheet1.write(1, 2, self.textEdit.toPlainText())
         print(self.textEdit.toPlainText())
         worksheet1.write(1, 3, 0)
-        worksheet1.write(1, 5, str(my_file))
+        worksheet1.write(1, 5, str(2))
         worksheet1.write(1, 6, str(my_file))
         workbook.save(str(my_file) + '/' + img_name + '.xls')
         self.close()
