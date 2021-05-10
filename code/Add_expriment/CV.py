@@ -3,6 +3,8 @@ import os
 import cv2
 import matlab.engine
 import numpy as np
+from PIL import Image
+from numpy import array
 
 
 class cv:  # 加算法
@@ -34,6 +36,110 @@ class cv:  # 加算法
         result = eng.gradient_watershed(url, a, b)
         eng.quit()
         return result
+
+    def get_maximum(url,  mol, min):
+        img = array(Image.open(url).convert('L'), 'f')
+        # height = img.shape[0]  # 将tuple中的元素取出，赋值给height，width，channels
+        # width = img.shape[1]
+        # print(height, width)
+        # im = mw.ImageOriginal
+        im = cv2.imread(url)
+        # im = Image.open("lena2.jpg")
+        # mol = 47
+        maximun = []
+        changyu = img.shape[1] % mol  # 图片长度和模板的余数
+        changbei = img.shape[1] // mol  # 图片长除以模板大小，取整
+        kuanyu = img.shape[0] % mol  # 图片宽度和模板的余数
+        kuanbei = img.shape[0] // mol  # 图片宽除以模板大小，取整
+        for row in range(0, img.shape[0] - mol, mol):  # 遍历每一行
+            for col in range(0, img.shape[1] - mol, mol):
+                # gray_min = 255
+                gray_min = 0
+                gray_max = 0
+                max_x = -1
+                max_y = -1
+                # 此步骤筛选出全局最小值
+                for i in range(0, mol):  # 遍历窗口内每一行
+                    for j in range(0, mol):  # 遍历窗口内每一行
+                        if img[row + i, col + j] >= gray_min:
+                            gray_min = img[row + i, col + j]
+                            max_x = row + i  # 窗口内灰度值最小的点横坐标
+                            max_y = col + j  # 窗口内灰度值最小的点纵坐标
+                # print(gray_min, max_x, max_y)
+                # cv2.circle(im, (max_y, max_x), 1, (30, 255, 255), 2)
+                # maximun.append([max_y, max_x])
+                if gray_min > min:
+                    # print(gray_min, max_x, max_y)
+                    # cv2.circle(im, (max_y, max_x), 1, (30, 255, 255), 2)
+                    maximun.append([max_y, max_x])
+
+        if changyu > 0:
+
+            col = mol * changbei  # 遍历每一行
+            for row in range(0, img.shape[0] - mol, mol):  # 遍历每一列
+
+                gray_min = 0
+                max_x = -1
+                max_y = -1
+                for j in range(0, changyu):  # 遍历窗口内每一行
+                    for i in range(0, mol):  # 遍历窗口内每一行
+                        if img[row + i, col + j] >= gray_min:
+                            gray_min = img[row + i, col + j]
+                            max_x = row + i  # 窗口内灰度值最小的点横坐标
+                            max_y = col + j  # 窗口内灰度值最小的点纵坐标
+                # print(gray_min, max_x, max_y)
+                # cv2.circle(img, (max_x, max_y), 1, (0, 0, 0), 2)#黄色
+                # cv2.circle(im, (max_y, max_x), 1, (30, 255, 255), 2)
+                # maximun.append([max_y, max_x])
+                if gray_min > min:
+                    # print(gray_min, max_x, max_y)
+                    # cv2.circle(im, (max_y, max_x), 1, (30, 255, 255), 2)
+                    maximun.append([max_y, max_x])
+        if kuanyu > 0:
+
+            row = mol * kuanbei  # 遍历每一行
+            for col in range(0, img.shape[1] - mol, mol):  # 遍历每一列
+
+                gray_min = 0
+                max_x = -1
+                max_y = -1
+                for j in range(0, mol):  # 遍历窗口内每一行
+                    for i in range(0, kuanyu):  # 遍历窗口内每一行
+                        if img[row + i, col + j] >= gray_min:
+                            gray_min = img[row + i, col + j]
+                            max_x = row + i  # 窗口内灰度值最小的点横坐标
+                            max_y = col + j  # 窗口内灰度值最小的点纵坐标
+                # print(gray_min, max_x, max_y)
+                # cv2.circle(img, (max_x, max_y), 1, (0, 0, 0), 2)  # 黄色
+                # cv2.circle(im, (max_y, max_x), 1, (30, 255, 255), 2)
+                # maximun.append([max_y, max_x])
+                if gray_min > min:
+                    # print(gray_min, max_x, max_y)
+                    # cv2.circle(im, (max_y, max_x), 1, (30, 255, 255), 2)
+                    maximun.append([max_y, max_x])
+        if changyu > 0 and kuanyu > 0:
+
+            col = mol * changbei  # 遍历每一行
+            row = mol * kuanbei  # 遍历每一列
+
+            gray_min = 0
+            max_x = -1
+            max_y = -1
+            for j in range(0, changyu):  # 遍历窗口内每一行
+                for i in range(0, kuanyu):  # 遍历窗口内每一行
+                    if img[row + i, col + j] >= gray_min:
+                        gray_min = img[row + i, col + j]
+                        max_x = row + i  # 窗口内灰度值最小的点横坐标
+                        max_y = col + j  # 窗口内灰度值最小的点纵坐标
+            # print(gray_min, max_x, max_y)
+            # cv2.circle(img, (max_x, max_y), 1, (0, 0, 0), 2)  # 黄色
+            # cv2.circle(im, (max_y, max_x), 1, (30, 255, 255), 2)
+            # maximun.append([max_y, max_x])
+            if gray_min > min:
+                # print(gray_min, max_x, max_y)
+                # cv2.circle(im, (max_y, max_x), 1, (30, 255, 255), 2)
+                maximun.append([max_y, max_x])
+        return maximun
 
     def get_march(url, min_res, dis, march_path, meth):
         ans = []

@@ -200,6 +200,8 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             ans = CV.cv.get_march(img_after_pretreat, float(a), float(b),
                                   'D:\Tree\Template\\' + self.algorithm_select_2.currentText(),
                                   self.algorithm_select_3.currentText())
+        elif self.algorithm_select.currentText() == '局部最大值':
+            ans = CV.cv.get_maximum(img_after_pretreat, int(a), int(b))
 
         # print(ans)
         print('yes')
@@ -215,7 +217,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     def ans_compare(self, ans):
         default_distance = 49
         if self.algorithm_select.currentText() == '模板匹配':
-            default_distance = float(self.para2.text())*0.9
+            default_distance = float(self.para2.text()) * 0.9
         xf = xlrd.open_workbook(path)
         ms = xf.sheet_by_index(0).cell_value(1, 4)
         if len(ms) == 0:
@@ -283,7 +285,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         global roww
         roww = row
 
-        path_ = path[:-4] + '-' + str(str_id)+'@'+ b_code + '.xls'
+        path_ = path[:-4] + '-' + str(str_id) + '@' + b_code + '.xls'
         workbook = xlwt.Workbook(encoding='utf-8')
         worksheet1 = workbook.add_sheet('目视')
         tp = right_list.copy()
