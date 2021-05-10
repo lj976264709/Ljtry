@@ -11,6 +11,7 @@ from Create_exp import Ui_Create_Dialog
 from Create_logic import Logic_create
 from Visual_log import Visual_logic
 from config_log import logic_config
+from imageCut import Form
 from mainUI import Ui_MainWindow
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -32,7 +33,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         self.expBT.clicked.connect(self.jump_to_add)  #
         self.mushiBT.clicked.connect(self.jump_to_mushi)  #
         self.RN.clicked.connect(self.get_table)
-        self.Config.triggered.connect(self.jump_to_config)
+        # self.Config.triggered.connect(self.jump_to_config)
         self.marchSeting.triggered.connect(self.jump_to_march)
         self.get_menu()  # 获得实验按钮
 
@@ -41,22 +42,44 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         log.show()
         log.exec_()
 
+    def get_menu_item(self, menu, row):
+        menu.clear()
+        if len(row[0].value.split('-')[1]) == 0:
+            menu.setEnabled(False)
+            return
+        menu.setTitle(row[0].value.split('-')[1])
+
+        for i in range(1, len(row)):
+            if len(row[i].value) > 0:
+                nm = row[i].value.split('-')
+                menu.addAction(QAction(nm[1], self))
+        # 单击任何Qmenu对象，都会发射信号，绑定槽函数
+        menu.triggered[QAction].connect(self.menu_trigger)
+
     def get_menu(self):
         xf = xlrd.open_workbook('D:/Tree/config.xls')
         st = xf.sheet_by_index(0)
-        tp = st.row(0)
-        self.menu_2.clear()
-        for i in range(1, len(tp)):
-            if len(tp[i].value) > 0:
-                self.menu_2.addAction(QAction(tp[i].value, self))
-        # 单击任何Qmenu对象，都会发射信号，绑定槽函数
-        self.menu_2.triggered[QAction].connect(self.menu_trigger)
+        menus = [self.menu_2, self.menu_3, self.menu_4]
+        print(st.nrows)
+        for i in range(len(menus)):
+            if i + 2 >= st.nrows:
+                # menus[i].clear()
+                menus[i].setEnabled(False)
+                menus[i].setTitle('')
+                menus[i].hide()
+            else:
+                print(i)
+                self.get_menu_item(menus[i], st.row(i + 2))
 
     def menu_trigger(self, wa):
         if wa.text() == '目视定位':
             self.jump_to_mushi()
-        elif wa.text() == '目视区域':
-            print('iiiiiii')
+        elif wa.text() == '模板裁取':
+            log = Form()
+            log.show()
+            log.exec_()
+        elif wa.text() == '实验配置':
+            self.jump_to_config()
 
     def jump_to_config(self):
         log = logic_config()
