@@ -217,7 +217,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
     def ans_compare(self, ans):
         default_distance = 49
         if self.algorithm_select.currentText() == '模板匹配':
-            default_distance = float(self.para2.text()) * 0.9
+            default_distance = float(self.para2.text()) * 0.45
         xf = xlrd.open_workbook(path)
         ms = xf.sheet_by_index(0).cell_value(1, 4)
         if len(ms) == 0:

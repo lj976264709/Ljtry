@@ -52,6 +52,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
         for i in range(1, len(row)):
             if len(row[i].value) > 0:
                 nm = row[i].value.split('-')
+                # print(nm[1])
                 menu.addAction(QAction(nm[1], self))
         # 单击任何Qmenu对象，都会发射信号，绑定槽函数
         menu.triggered[QAction].connect(self.menu_trigger)
@@ -74,7 +75,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
     def menu_trigger(self, wa):
         if wa.text() == '目视定位':
             self.jump_to_mushi()
-        elif wa.text() == '模板裁取':
+        elif wa.text() == '抽样或模板裁取':
             log = Form()
             log.show()
             log.exec_()
