@@ -11,7 +11,7 @@ from PyQt5.QtGui import QImage, QFont
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QDialog, QRadioButton, QButtonGroup, QCheckBox, QInputDialog
 import matlab.engine
-import CV
+import Position
 from Add_exp import Ui_add_exp_dialog
 
 vis = []
@@ -191,17 +191,17 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         c = self.para3.text()
         print(a, b)
         if self.algorithm_select.currentText() == '标记分水岭':
-            ans = CV.cv.get_fenshuiling(img_after_pretreat, float(a))  # 1.0
+            ans = Position.cv.get_fenshuiling(img_after_pretreat, float(a))  # 1.0
         elif self.algorithm_select.currentText() == '梯度分水岭':
-            ans = CV.cv.get_fenshuiling_g(img_after_pretreat, float(a), int(b))  # 1.0, 5
+            ans = Position.cv.get_fenshuiling_g(img_after_pretreat, float(a), int(b))  # 1.0, 5
         elif self.algorithm_select.currentText() == 'CV模型':
-            ans = CV.cv.get_cv(img_after_pretreat, float(a), int(b), float(c))
+            ans = Position.cv.get_cv(img_after_pretreat, float(a), int(b), float(c))
         elif self.algorithm_select.currentText() == '模板匹配':
-            ans = CV.cv.get_march(img_after_pretreat, float(a), float(b),
+            ans = Position.cv.get_march(img_after_pretreat, float(a), float(b),
                                   'D:\Tree\Template\\' + self.algorithm_select_2.currentText(),
-                                  self.algorithm_select_3.currentText())
+                                        self.algorithm_select_3.currentText())
         elif self.algorithm_select.currentText() == '局部最大值':
-            ans = CV.cv.get_maximum(img_after_pretreat, int(a), int(b))
+            ans = Position.cv.get_maximum(img_after_pretreat, int(a), int(b))
 
         # print(ans)
         print('yes')
@@ -354,4 +354,4 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         if self.algorithm_select.currentText() == 'CV模型':
             flag = True
         if flag:
-            CV.cv.get_CLI(pre_url, pre_url)
+            Position.cv.get_CLI(pre_url, pre_url)
