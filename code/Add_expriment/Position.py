@@ -36,7 +36,7 @@ class cv:  # 加算法
         eng.quit()
         return result
 
-    def get_maximum(url,  mol, min):
+    def get_maximum(url, mol, min):
         img = array(Image.open(url).convert('L'), 'f')
         # height = img.shape[0]  # 将tuple中的元素取出，赋值给height，width，channels
         # width = img.shape[1]
@@ -143,6 +143,7 @@ class cv:  # 加算法
     def get_march(url, min_res, dis, march_path, meth):
         ans = []
         rt = []
+        img_ = cv2.imread(url)
         print(url, min_res, march_path, meth)
         img = cv2.imread(url, 0)
         for tp in os.walk(march_path):
@@ -157,7 +158,8 @@ class cv:  # 加算法
             res = cv2.matchTemplate(img, template, method)
             loc = np.where(res > min_res)
             for pt in zip(*loc[::-1]):
-                rt.append(pt)
+                rt.append([pt[0] + int(w / 2), pt[1] + int(h / 2)])
+
             vis = [0] * len(rt)
             for i in range(len(rt)):
                 if vis[i] == 1:
@@ -183,13 +185,15 @@ class cv:  # 加算法
                             break
                     if flag:
                         ans.append(rt[j])
+            for i in range(len(ans)):
+                cv2.rectangle(img_, (int(ans[i][0] - w / 2), int(ans[i][1] - h / 2)),
+                              (int(ans[i][0] + w / 2), int(ans[i][1] + h / 2)), (0, 0, 137), 1)
         # print("len==")
         # print(len(ans))
         ans__ = []
-        img_ = cv2.imread(url)
         for i in range(len(ans)):
-            ans__.append([ans[i][0] + int(w / 2), ans[i][1] + int(h / 2)])
-            cv2.rectangle(img_, (int(ans[i][0]), int(ans[i][1])),
-                          (int(ans[i][0] + w), int(ans[i][1]) + h), (0, 0, 137), 1)
+            ans__.append(ans[i])
+            # cv2.rectangle(img_, (int(ans[i][0]), int(ans[i][1])),
+            #               (int(ans[i][0] + w), int(ans[i][1]) + h), (0, 0, 137), 1)
         cv2.imwrite(r'D:\ans.png', img_)
         return ans__

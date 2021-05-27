@@ -4,6 +4,7 @@ import os
 import sys
 import time
 from shutil import copyfile
+import re
 
 import cv2
 from PyQt5.QtWidgets import *
@@ -52,6 +53,7 @@ class Visual_logic(QDialog, Ui_Visual):
         img_url = url
         # 初始化界面
         self.setupUi(self)
+        self.setWindowTitle(img_url.split('\\')[-1] + '目视定位')
         self.count.setText('0')
         self.img_widget = ImageWithMouseControl(self)  # 设定图片放大缩小类
         self.img_widget.setObjectName("img_widget")
@@ -64,7 +66,7 @@ class Visual_logic(QDialog, Ui_Visual):
         self.finish.clicked.connect(self.finish_mark)
         self.spinBox.valueChanged.connect(self.changeSize)
         self.spinBox.setMinimum(2)
-        self.spinBox.setMaximum(12)
+        self.spinBox.setMaximum(20)
         self.node_inti()  # 初始化点位
         # 初始化界面
 

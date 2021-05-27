@@ -31,8 +31,8 @@ class Check_logic(QDialog, Ui_Dialog_Check):
         self.description.setText(st.cell_value(1, 0) + '目视机视对比')
         hang = int(hang)
         self.description_3.setText('准确率:' + str(round(float(sf.cell_value(hang, 8)) * 100, 3)) +
-                                   '%   漏判率:' + str(round(float(sf.cell_value(hang, 9)) * 100, 3)) +
-                                   '%   误判率:' + str(round(float(sf.cell_value(hang, 10)) * 100, 3)) +
+                                   '%   误判率:' + str(round(float(sf.cell_value(hang, 9)) * 100, 3)) +
+                                   '%   漏判率:' + str(round(float(sf.cell_value(hang, 10)) * 100, 3)) +
                                    '%   匹配率:' + str(round(float(sf.cell_value(hang, 11)) * 100, 3)) + '%')
         self.description_2.setText(" ○ 为正确标记，╳ 为误判标记，■ 为漏判标记")
         global right_list, wrong_list, last_list, img_url

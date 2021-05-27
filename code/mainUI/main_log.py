@@ -142,7 +142,7 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
 
     def get_table(self):
         self.model = QStandardItemModel(200, 12)
-        titles = ['创建时间', '预处理', '单木定位算法', '识别树木数量', '正确识别数量', '错判单木数目', '漏判单木数目', '准确率', '漏判率', '误判率', '匹配率',
+        titles = ['创建时间', '预处理', '单木定位算法', '识别树木数量', '正确识别数量', '误判单木数目', '漏判单木数目', '准确率', '误判率', '漏判率', '匹配率',
                   ' ']
         self.model.setHorizontalHeaderLabels(titles)
         # self.model.setItem(1,0,QStandardItem("hh"))
@@ -159,9 +159,9 @@ class Logic_mian(QMainWindow, Ui_MainWindow):
                 for j in range(1, 12):
                     if j > 7:
                         tp = float(st.cell_value(i, j)) * 100
-                        self.model.setItem(r_rows, j - 1, QStandardItem(str(round(tp, 3))))
+                        self.model.setItem(r_rows, j - 1, QStandardItem(str(round(tp, 1))))
                     else:
-                        self.model.setItem(r_rows, j - 1, QStandardItem(st.cell_value(i, j)))
+                        self.model.setItem(r_rows, j - 1, QStandardItem(str(st.cell_value(i, j))))
                 row_list.append(i)
                 r_rows = r_rows + 1
 
