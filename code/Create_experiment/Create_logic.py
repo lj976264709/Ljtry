@@ -29,7 +29,7 @@ class Logic_create(QDialog, Ui_Create_Dialog):
 
     def get_file(self):
         global directory
-        directory = QFileDialog.getExistingDirectory(None, "选取文件夹", "D:/Tree")  # 起始路径
+        directory = QFileDialog.getExistingDirectory(None, "选取实验区文件夹", "D:/Tree")  # 起始路径
         self.file_url.setText(directory)
 
     def get_img(self):

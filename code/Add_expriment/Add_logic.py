@@ -215,9 +215,9 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         return math.sqrt((pa[0] - pb[0]) * (pa[0] - pb[0]) + (pa[1] - pb[1]) * (pa[1] - pb[1]))
 
     def ans_compare(self, ans):
-        default_distance = 49
+        default_distance = 150
         if self.algorithm_select.currentText() == '模板匹配':
-            default_distance = float(self.para2.text()) * 0.45
+            default_distance = float(self.para2.text()) * 1
         xf = xlrd.open_workbook(path)
         ms = xf.sheet_by_index(0).cell_value(1, 4)
         if len(ms) == 0:
@@ -344,6 +344,8 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             tp = yuchuli[i].split('_')
             if tp[0] == '高斯滤波':
                 images = cv2.GaussianBlur(images, (int(tp[1]), int(tp[1])), 0)
+                # images =
+                images = cv2.cvtColor(images, cv2.COLOR_RGB2GRAY)
             elif tp[0] == '中值滤波':
                 images = cv2.medianBlur(images, int(tp[1]))
             elif tp[0] == '均值滤波':

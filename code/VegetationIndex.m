@@ -42,7 +42,7 @@ b1 = B1 ./ (R1 + B1 + G1);
 exg = 2 * g1 - r1 - b1;
 %imshow(exg)
 
-%imwrite(exg,'D:\yjs\img\Google3_exg.PNG');
+%imwrite(exg,url);
 
 exg_level = graythresh(exg);
 exg_bw = im2bw(exg,exg_level);
