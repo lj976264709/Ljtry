@@ -346,7 +346,6 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             tp = yuchuli[i].split('_')
             if tp[0] == '高斯滤波':
                 images = cv2.GaussianBlur(images, (int(tp[1]), int(tp[1])), 0)
-                #
             elif tp[0] == '中值滤波':
                 images = cv2.medianBlur(images, int(tp[1]))
             elif tp[0] == '均值滤波':
