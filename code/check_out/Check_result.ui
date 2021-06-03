@@ -24,8 +24,8 @@
    </property>
    <property name="font">
     <font>
-     <family>Adobe Arabic</family>
-     <pointsize>26</pointsize>
+     <family>Adobe Devanagari</family>
+     <pointsize>30</pointsize>
     </font>
    </property>
    <property name="text">
@@ -59,12 +59,12 @@
    </property>
    <property name="font">
     <font>
-     <family>Adobe Arabic</family>
-     <pointsize>16</pointsize>
+     <family>Adobe Devanagari</family>
+     <pointsize>22</pointsize>
     </font>
    </property>
    <property name="text">
-    <string>description</string>
+    <string>     为正确标记，    为误判标记，      为漏判标记</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -81,8 +81,8 @@
    </property>
    <property name="font">
     <font>
-     <family>Adobe 黑体 Std R</family>
-     <pointsize>14</pointsize>
+     <family>Adobe Devanagari</family>
+     <pointsize>22</pointsize>
     </font>
    </property>
    <property name="text">
@@ -92,7 +92,66 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>800</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../../image/file.qrc">:/icon/yuan.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>800</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../../image/file.qrc">:/icon/cha.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>800</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../../image/file.qrc">:/icon/fang.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../image/file.qrc"/>
+ </resources>
  <connections/>
 </ui>

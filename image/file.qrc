@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="icon">
+        <file>fang.png</file>
+        <file>cha.png</file>
+        <file>yuan.png</file>
+    </qresource>
+</RCC>

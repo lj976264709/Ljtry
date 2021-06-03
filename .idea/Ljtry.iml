@@ -10,6 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/code/config" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/code/March_setting" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/code/ImageCut" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/image" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
