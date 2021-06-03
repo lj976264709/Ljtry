@@ -12,9 +12,9 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog, QDialog
 from Create_exp import Ui_Create_Dialog
 from Visual_log import Visual_logic
 
-header1 = ['实验名称', '图像地址', '描述', '目视定位', '目视点对', '标记尺寸','预处理文件所在位置']
+header1 = ['实验名称', '图像地址', '描述', '目视定位', '目视点对', '标记尺寸', '预处理文件所在位置']
 header2 = ['编号', '创建时间', '预处理编码',
-           '算法', '识别树木数量', '正确识别数量', '误判单木数目', '漏判单木数目', '准确率', '漏判率', '误判率', '匹配率', '点对']
+           '算法', '识别树木数量', '正确识别数量', '误判单木数目', '漏判单木数目', '准确率', '误判率', '漏判率', '匹配率', '点对']
 path = ""
 directory = ''
 
@@ -70,7 +70,7 @@ class Logic_create(QDialog, Ui_Create_Dialog):
         # wj = wjj[-1]#wj是地区
         # print(wj)
         # wenjianjia
-        my_file = Path(directory + '/'+img_name)
+        my_file = Path(directory + '/' + img_name)
         if not my_file.exists():
             os.makedirs(my_file)
 

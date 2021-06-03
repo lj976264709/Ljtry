@@ -274,9 +274,9 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         wsheet.write(row, 6, str(len(wrong_list)))
         wsheet.write(row, 7, str(len(last_list)))
 
-        wsheet.write(row, 8, str(len(right_list) / (len(right_list) + len(wrong_list))))
+        wsheet.write(row, 8, str(len(right_list) / (len(right_list) + len(last_list))))
         wsheet.write(row, 9, str(len(wrong_list) / (len(right_list) + len(wrong_list))))
-        wsheet.write(row, 10, str(len(last_list) / len(ans)))
+        wsheet.write(row, 10, str(len(last_list) / (len(right_list) + len(last_list))))
         wsheet.write(row, 11, str(len(right_list) / (len(right_list) + len(wrong_list) + len(last_list))))
 
         wsheet.write(row, 12, str(ans))
