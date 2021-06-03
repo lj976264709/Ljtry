@@ -41,6 +41,8 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         self.init_pretratment()
 
     def init_pretratment(self):
+        global b_code
+        b_code = ''
         yuchuli.clear()
         num_cs.clear()
         self.bianma.setText(bianma_)
@@ -198,7 +200,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             ans = Position.cv.get_cv(img_after_pretreat, float(a), int(b), float(c))
         elif self.algorithm_select.currentText() == '模板匹配':
             ans = Position.cv.get_march(img_after_pretreat, float(a), float(b),
-                                  'D:\Tree\Template\\' + self.algorithm_select_2.currentText(),
+                                        'D:\Tree\Template\\' + self.algorithm_select_2.currentText(),
                                         self.algorithm_select_3.currentText())
         elif self.algorithm_select.currentText() == '局部最大值':
             ans = Position.cv.get_maximum(img_after_pretreat, int(a), int(b))
@@ -215,7 +217,7 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
         return math.sqrt((pa[0] - pb[0]) * (pa[0] - pb[0]) + (pa[1] - pb[1]) * (pa[1] - pb[1]))
 
     def ans_compare(self, ans):
-        default_distance = 150
+        default_distance = 49
         if self.algorithm_select.currentText() == '模板匹配':
             default_distance = float(self.para2.text()) * 1
         xf = xlrd.open_workbook(path)
@@ -344,16 +346,15 @@ class Logic_add(QDialog, Ui_add_exp_dialog):
             tp = yuchuli[i].split('_')
             if tp[0] == '高斯滤波':
                 images = cv2.GaussianBlur(images, (int(tp[1]), int(tp[1])), 0)
-                # images =
-                images = cv2.cvtColor(images, cv2.COLOR_RGB2GRAY)
+                #
             elif tp[0] == '中值滤波':
                 images = cv2.medianBlur(images, int(tp[1]))
             elif tp[0] == '均值滤波':
                 images = cv2.blur(images, (int(tp[1]), int(tp[1])))
             elif tp[0] == 'GLI植被提取':
                 flag = True
+        if self.algorithm_select.currentText() == 'CV模型' and not flag:
+            images = cv2.cvtColor(images, cv2.COLOR_RGB2GRAY)
         cv2.imwrite(pre_url, images)
-        if self.algorithm_select.currentText() == 'CV模型':
-            flag = True
         if flag:
             Position.cv.get_CLI(pre_url, pre_url)

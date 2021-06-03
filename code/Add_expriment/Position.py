@@ -185,9 +185,9 @@ class cv:  # 加算法
                             break
                     if flag:
                         ans.append(rt[j])
-            for i in range(len(ans)):
-                cv2.rectangle(img_, (int(ans[i][0] - w / 2), int(ans[i][1] - h / 2)),
-                              (int(ans[i][0] + w / 2), int(ans[i][1] + h / 2)), (0, 0, 137), 1)
+        for i in range(len(ans)):
+            cv2.rectangle(img_, (int(ans[i][0] - w / 2), int(ans[i][1] - h / 2)),
+                          (int(ans[i][0] + w / 2), int(ans[i][1] + h / 2)), (0, 0, 137), 1)
         # print("len==")
         # print(len(ans))
         ans__ = []
